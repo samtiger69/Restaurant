@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
+using System.Net.Http.Headers;
 
 namespace Restaurant
 {
@@ -7,6 +8,8 @@ namespace Restaurant
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();

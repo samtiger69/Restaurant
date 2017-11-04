@@ -10,6 +10,7 @@ namespace Restaurant.Controllers
     public class TestController : BaseController
     {
         [HttpGet]
+        [Authorize]
         public string GetGreeting(string txt)
         {
             return txt + " from server";
