@@ -1,18 +1,16 @@
 ﻿using Restaurant.Entities;
 using Restaurant.Models;
+using Restaurant.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
-    public class BranchController : ApiController
+    public class BranchController : BaseController
     {
         [Authorize]
+        [HttpPost]
         public Response<List<Branch>> List(Request<BaseListModel> request)
         {
             try
@@ -49,7 +47,67 @@ namespace Restaurant.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public Response<Branch> Create(Request<Branch> request)
+        {
+            try
+            {
+                var branchService = BranchService.GetInstance();
+                TrimNames(request.Data);
+                ValidateCreateBranch(request.Data);
+                return branchService.Create(request);
+            }
+            catch (RestaurantException ex)
+            {
+                return new Response<Branch>
+                {
+                    Data = null,
+                    ErrorCode = ex.ErrorCode
+                };
+            }
+            catch (Exception e)
+            {
+                return new Response<Branch>
+                {
+                    Data = null,
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = e.Message,
+                        ErrorNumber = ErrorNumber.GeneralError
+                    }
+                };
+            }
+        }
 
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public Response Update(Request<Branch> request)
+        {
+            try
+            {
+                var branchService = BranchService.GetInstance();
+                return branchService.Update(request);
+            }
+            catch (RestaurantException ex)
+            {
+                return new Response
+                {
+                    ErrorCode = ex.ErrorCode
+                };
+            }
+            catch (Exception e)
+            {
+                return new Response
+                {
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = e.Message,
+                        ErrorNumber = ErrorNumber.GeneralError
+                    }
+                };
+            }
+        }
 
     }
 }

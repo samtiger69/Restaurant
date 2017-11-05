@@ -228,10 +228,13 @@
     <Compile Include="Models\BaseListModel.cs" />
     <Compile Include="Models\MealListModel.cs" />
     <Compile Include="Models\MealTypeListModel.cs" />
+    <Compile Include="Models\MealTypeUpdateModel.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\RestaurantException.cs" />
     <Compile Include="Models\StoredProcedure.cs" />
+    <Compile Include="Models\UpdateAttributeModel.cs" />
+    <Compile Include="Models\UpdateMealModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

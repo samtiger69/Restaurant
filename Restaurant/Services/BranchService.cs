@@ -129,28 +129,32 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<Branch> Update(Request<Branch> request)
+        public Response Update(Request<Branch> request)
         {
             try
             {
-                var response = new Response<Branch>
+                var response = new Response
                 {
-                    Data = request.Data
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "",
+                        ErrorNumber = ErrorNumber.Success
+                    }
                 };
                 var result = ErrorNumber.Success;
                 ExecuteReader(StoredProcedure.BRANCH_UPDATE, delegate (SqlCommand cmd)
                 {
                     cmd.Parameters.AddWithValue("@Id", request.Data.Id);
                     if (!string.IsNullOrEmpty(request.Data.Name))
-                        cmd.Parameters.AddWithValue("@Name", request.Data.Name);
+                        cmd.Parameters.AddWithValue("@Name", request.Data.Name.Trim());
                     if (!string.IsNullOrEmpty(request.Data.NameAr))
-                        cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
+                        cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr.Trim());
                     if (!string.IsNullOrEmpty(request.Data.LocationDescription))
-                        cmd.Parameters.AddWithValue("@LocationDescription", request.Data.LocationDescription);
+                        cmd.Parameters.AddWithValue("@LocationDescription", request.Data.LocationDescription.Trim());
                     if (!string.IsNullOrEmpty(request.Data.Latitude))
-                        cmd.Parameters.AddWithValue("@Latitude", request.Data.Latitude);
+                        cmd.Parameters.AddWithValue("@Latitude", request.Data.Latitude.Trim());
                     if (!string.IsNullOrEmpty(request.Data.Longitude))
-                        cmd.Parameters.AddWithValue("@Longitude", request.Data.Longitude);
+                        cmd.Parameters.AddWithValue("@Longitude", request.Data.Longitude.Trim());
                     if (request.Data.IsActive.HasValue)
                         cmd.Parameters.AddWithValue("@IsActive", request.Data.IsActive);
                     if (request.Data.IsDeleted.HasValue)

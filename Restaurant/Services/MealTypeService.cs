@@ -125,13 +125,17 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<MealType> Update(Request<MealType> request)
+        public Response Update(Request<MealTypeUpdateModel> request)
         {
             try
             {
-                var response = new Response<MealType>
+                var response = new Response
                 {
-                    Data = request.Data
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "",
+                        ErrorNumber = ErrorNumber.Success
+                    }
                 };
                 var result = ErrorNumber.Success;
                 ExecuteReader(StoredProcedure.MEAL_TYPE_UPDATE, delegate (SqlCommand cmd)
@@ -143,10 +147,12 @@ namespace Restaurant.Services
                         cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
                     if (!string.IsNullOrEmpty(request.Data.Description))
                         cmd.Parameters.AddWithValue("@Description", request.Data.Description);
+                    if (request.Data.BranchId.HasValue)
+                        cmd.Parameters.AddWithValue("@BranchId", request.Data.BranchId.Value);
                     if (request.Data.IsActive.HasValue)
-                        cmd.Parameters.AddWithValue("@IsActive", request.Data.IsActive);
+                        cmd.Parameters.AddWithValue("@IsActive", request.Data.IsActive.Value);
                     if (request.Data.IsDeleted.HasValue)
-                        cmd.Parameters.AddWithValue("@IsDeleted", request.Data.IsDeleted);
+                        cmd.Parameters.AddWithValue("@IsDeleted", request.Data.IsDeleted.Value);
                 },
                 delegate (SqlDataReader reader)
                 {
