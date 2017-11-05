@@ -11,7 +11,7 @@ namespace Restaurant.Services
 {
     public class AttributeService : BaseService
     {
-        public async Task<Response<List<Entities.Attribute>>> List(Request request)
+        public Response<List<Entities.Attribute>> List(Request request)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace Restaurant.Services
                     }
                 };
 
-                await ExecuteReader(StoredProcedure.ATTRIBUTE_SELECT, delegate (SqlCommand cmd)
+                 ExecuteReader(StoredProcedure.ATTRIBUTE_SELECT, delegate (SqlCommand cmd)
                 {
                 }, delegate (SqlDataReader reader)
                 {

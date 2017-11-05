@@ -9,6 +9,5 @@ namespace Restaurant.Entities
     {
         public int? GroupId { get; set; }
         public decimal Price { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }

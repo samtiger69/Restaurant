@@ -13,13 +13,13 @@ namespace Restaurant.Controllers
     public class BranchController : ApiController
     {
         [Authorize]
-        public async Task<Response<List<Branch>>> List(Request<BaseListModel> request)
+        public Response<List<Branch>> List(Request<BaseListModel> request)
         {
             try
             {
                 return new Response<List<Branch>>()
                 {
-                    Data = await Cache.GetBranches(request.Data),
+                    Data = Cache.GetBranches(request.Data),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",

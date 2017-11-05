@@ -13,13 +13,13 @@ namespace Restaurant.Controllers
     public class AttributeGroupController : BaseController
     {
         [Authorize]
-        public async Task<Response<List<AttributeGroup>>> List(Request<BaseListModel> request)
+        public Response<List<AttributeGroup>> List(Request<BaseListModel> request)
         {
             try
             {
                 return new Response<List<AttributeGroup>>()
                 {
-                    Data = await Cache.GetAttributeGroups(request.Data),
+                    Data = Cache.GetAttributeGroups(request.Data),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",

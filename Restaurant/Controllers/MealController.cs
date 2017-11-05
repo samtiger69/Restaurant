@@ -13,13 +13,13 @@ namespace Restaurant.Controllers
     public class MealController : BaseController
     {
         [Authorize]
-        public async Task<Response<List<Meal>>> List(Request<MealListModel> request)
+        public Response<List<Meal>> List(Request<MealListModel> request)
         {
             try
             {
                 return new Response<List<Meal>>()
                 {
-                    Data = await Cache.GetMeals(request.Data),
+                    Data = Cache.GetMeals(request.Data),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",

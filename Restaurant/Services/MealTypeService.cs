@@ -11,7 +11,7 @@ namespace Restaurant.Services
 {
     public class MealTypeService : BaseService
     {
-        public async Task<Response<List<MealType>>> List(Request request)
+        public Response<List<MealType>> List(Request request)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace Restaurant.Services
                     }
                 };
 
-                await ExecuteReader(StoredProcedure.MEAL_TYPE_SELECT, delegate (SqlCommand cmd)
+                ExecuteReader(StoredProcedure.MEAL_TYPE_SELECT, delegate (SqlCommand cmd)
                 {
                 }, delegate (SqlDataReader reader)
                 {
@@ -42,6 +42,109 @@ namespace Restaurant.Services
                         });
                     }
                 });
+                return response;
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Response<MealType> Create(Request<MealType> request)
+        {
+            try
+            {
+                var response = new Response<MealType>
+                {
+                    Data = request.Data,
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "",
+                        ErrorNumber = ErrorNumber.Success
+                    }
+                };
+
+                ExecuteReader(StoredProcedure.MEAL_TYPE_CREATE, delegate (SqlCommand cmd)
+                {
+                    cmd.Parameters.AddWithValue("@Name", request.Data.Name);
+                    cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
+                    cmd.Parameters.AddWithValue("@BranchId", request.Data.BranchId);
+                    if (!string.IsNullOrEmpty(request.Data.Description))
+                        cmd.Parameters.AddWithValue("@Description", request.Data.Description);
+                },
+                delegate (SqlDataReader reader)
+                {
+                    if (reader.Read())
+                    {
+                        response.Data.Id = GetValue<int>(reader["Result"]);
+                    }
+                });
+                if (response.Data.Id == (int)ErrorNumber.Exists)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "A meal type with the same name/nameAr already exists in the db",
+                            ErrorNumber = ErrorNumber.Exists
+                        }
+                    };
+                Cache.ResetMealTypes();
+                return response;
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Response<MealType> Update(Request<MealType> request)
+        {
+            try
+            {
+                var response = new Response<MealType>
+                {
+                    Data = request.Data
+                };
+                var result = ErrorNumber.Success;
+                ExecuteReader(StoredProcedure.MEAL_TYPE_UPDATE, delegate (SqlCommand cmd)
+                {
+                    cmd.Parameters.AddWithValue("@Id", request.Data.Id);
+                    if (!string.IsNullOrEmpty(request.Data.Name))
+                        cmd.Parameters.AddWithValue("@Name", request.Data.Name);
+                    if (!string.IsNullOrEmpty(request.Data.NameAr))
+                        cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
+                    if (!string.IsNullOrEmpty(request.Data.Description))
+                        cmd.Parameters.AddWithValue("@Description", request.Data.Description);
+                    if (request.Data.IsActive.HasValue)
+                        cmd.Parameters.AddWithValue("@IsActive", request.Data.IsActive);
+                    if (request.Data.IsDeleted.HasValue)
+                        cmd.Parameters.AddWithValue("@IsDeleted", request.Data.IsDeleted);
+                },
+                delegate (SqlDataReader reader)
+                {
+                    if (reader.Read())
+                    {
+                        result = GetValue<ErrorNumber>(reader["Result"], ErrorNumber.Success);
+                    }
+                });
+                if (result == ErrorNumber.NotFound)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = string.Format("There isn't a meal type with the id: {0} in the db", request.Data.Id),
+                            ErrorNumber = ErrorNumber.NotFound
+                        }
+                    };
+                Cache.ResetMealTypes();
                 return response;
             }
             catch (RestaurantException ex)

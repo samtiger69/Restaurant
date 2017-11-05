@@ -15,14 +15,18 @@ namespace Restaurant.Models
         private static List<AttributeGroup> AttributeGroups;
         private static List<Entities.Attribute> Attributes;
 
-        public static async Task<List<Branch>> GetBranches(BaseListModel request)
+        public static void ResetBranches()
+        {
+            Branches = null;
+        }
+        public static List<Branch> GetBranches(BaseListModel request)
         {
             try
             {
                 if (Branches == null)
                 {
-                    var branchService = new BranchService();
-                    var response = await branchService.List(new Request());
+                    var branchService = BranchService.GetInstance();
+                    var response = branchService.List(new Request());
                     Branches = response.Data;
                 }
                 return Branches.Where(m => CheckBasicFilter(m, request)).ToList();
@@ -37,14 +41,18 @@ namespace Restaurant.Models
             }
         }
 
-        public static async Task<List<MealType>> GetMealTypes(MealTypeListModel request)
+        public static void ResetMealTypes()
+        {
+            MealTypes = null;
+        }
+        public static List<MealType> GetMealTypes(MealTypeListModel request)
         {
             try
             {
                 if (MealTypes == null)
                 {
                     var mealTypeService = new MealTypeService();
-                    var response = await mealTypeService.List(new Request());
+                    var response = mealTypeService.List(new Request());
                     MealTypes = response.Data;
                 }
                 return MealTypes.Where(m => CheckBasicFilter(m, request) &&
@@ -61,14 +69,18 @@ namespace Restaurant.Models
             }
         }
 
-        public static async Task<List<Meal>> GetMeals(MealListModel request)
+        public static void ResetMeals()
+        {
+            Meals = null;
+        }
+        public static List<Meal> GetMeals(MealListModel request)
         {
             try
             {
                 if (Meals == null)
                 {
                     var mealService = new MealService();
-                    var response = await mealService.List(new Request());
+                    var response = mealService.List(new Request());
                     Meals = response.Data;
                 }
                 return Meals.Where(m => CheckBasicFilter(m, request) &&
@@ -85,14 +97,18 @@ namespace Restaurant.Models
             }
         }
 
-        public static async Task<List<AttributeGroup>> GetAttributeGroups(BaseListModel request)
+        public static void ResetAttributeGroups()
+        {
+            AttributeGroups = null;
+        }
+        public static List<AttributeGroup> GetAttributeGroups(BaseListModel request)
         {
             try
             {
                 if (AttributeGroups == null)
                 {
                     var attributeGroupService = new AttributeGroupService();
-                    var response = await attributeGroupService.List(new Request());
+                    var response = attributeGroupService.List(new Request());
                     AttributeGroups = response.Data;
                 }
                 return AttributeGroups.Where(m => CheckBasicFilter(m,request)).ToList();
@@ -107,14 +123,18 @@ namespace Restaurant.Models
             }
         }
 
-        public static async Task<List<Entities.Attribute>> GetAttributes(BaseListModel request)
+        public static void ResetAttributes()
+        {
+            Attributes = null;
+        }
+        public static List<Entities.Attribute> GetAttributes(BaseListModel request)
         {
             try
             {
                 if (AttributeGroups == null)
                 {
                     var attributeService = new AttributeService();
-                    var response = await attributeService.List(new Request());
+                    var response = attributeService.List(new Request());
                     Attributes = response.Data;
                 }
                 return Attributes.Where(m => CheckBasicFilter(m,request)).ToList();

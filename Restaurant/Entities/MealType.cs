@@ -8,8 +8,6 @@ namespace Restaurant.Entities
     public class MealType : BasicEntity
     {
         public string Description { get; set; }
-        public int BranchId { get; set; }
-        public bool IsDeleted { get; set; }
-        public virtual List<Meal> Meals { get; set; }
+        public int? BranchId { get; set; }
     }
 }

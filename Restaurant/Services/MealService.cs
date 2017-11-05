@@ -11,7 +11,7 @@ namespace Restaurant.Services
 {
     public class MealService : BaseService
     {
-        public async Task<Response<List<Meal>>> List(Request request)
+        public Response<List<Meal>> List(Request request)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace Restaurant.Services
                     }
                 };
 
-                await ExecuteReader(StoredProcedure.MEAL_SELECT, delegate (SqlCommand cmd)
+                ExecuteReader(StoredProcedure.MEAL_SELECT, delegate (SqlCommand cmd)
                 {
                 }, delegate (SqlDataReader reader)
                 {

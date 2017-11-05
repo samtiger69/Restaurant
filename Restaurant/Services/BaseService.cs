@@ -63,7 +63,7 @@ namespace Restaurant.Services
             }
         }
 
-        protected async Task ExecuteReader(string storedProcedure, Action<SqlCommand> fillCommand, Action<SqlDataReader> fetchData)
+        protected void ExecuteReader(string storedProcedure, Action<SqlCommand> fillCommand, Action<SqlDataReader> fetchData)
         {
             try
             {
@@ -76,8 +76,8 @@ namespace Restaurant.Services
                         Connection = connection
                     };
                     fillCommand(command);
-                    await connection.OpenAsync();
-                    fetchData(await command.ExecuteReaderAsync());
+                    connection.Open();
+                    fetchData(command.ExecuteReader());
                 }
             }
             catch (Exception e)
