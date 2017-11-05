@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Restaurant.Entities
+namespace Restaurant.Models
 {
-    public class BasicEntity : BaseEntity
+    public class BaseListModel
     {
+        public int? Id { get; set; }
         public string Name { get; set; }
         public string NameAr { get; set; }
-        public bool IsActive { get; set; }
     }
 }

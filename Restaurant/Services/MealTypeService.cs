@@ -9,38 +9,36 @@ using System.Web;
 
 namespace Restaurant.Services
 {
-    public class BranchService : BaseService
+    public class MealTypeService : BaseService
     {
-
-        public async Task<Response<List<Branch>>> List(Request request)
+        public async Task<Response<List<MealType>>> List(Request request)
         {
             try
             {
-                var response = new Response<List<Branch>>
+                var response = new Response<List<MealType>>
                 {
-                    Data = new List<Branch>(),
+                    Data = new List<MealType>(),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
                         ErrorNumber = ErrorNumber.Success
                     }
                 };
-                
-                await ExecuteReader(StoredProcedure.BRANCH_SELECT, delegate (SqlCommand cmd)
+
+                await ExecuteReader(StoredProcedure.MEAL_TYPE_SELECT, delegate (SqlCommand cmd)
                 {
                 }, delegate (SqlDataReader reader)
                 {
                     while (reader.Read())
                     {
-                        response.Data.Add(new Branch
+                        response.Data.Add(new MealType
                         {
                             Id = GetValue<int>(reader["Id"], 0),
                             NameAr = GetValue<string>(reader["NameAr"], ""),
                             Name = GetValue<string>(reader["Name"], ""),
-                            LocationDescription = GetValue<string>(reader["LocationDescription"]),
                             IsActive = GetValue<bool>(reader["IsActive"], false),
-                            Latitude = GetValue<string>(reader["Latitude"], ""),
-                            Longitude = GetValue<string>(reader["Longitude"], "")
+                            BranchId = GetValue<int>(reader["BranchId"], 0),
+                            Description = GetValue<string>(reader["Description"], "")
                         });
                     }
                 });

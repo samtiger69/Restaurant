@@ -9,38 +9,34 @@ using System.Web;
 
 namespace Restaurant.Services
 {
-    public class BranchService : BaseService
+    public class AttributeGroupService : BaseService
     {
-
-        public async Task<Response<List<Branch>>> List(Request request)
+        public async Task<Response<List<AttributeGroup>>> List(Request request)
         {
             try
             {
-                var response = new Response<List<Branch>>
+                var response = new Response<List<AttributeGroup>>
                 {
-                    Data = new List<Branch>(),
+                    Data = new List<AttributeGroup>(),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
                         ErrorNumber = ErrorNumber.Success
                     }
                 };
-                
-                await ExecuteReader(StoredProcedure.BRANCH_SELECT, delegate (SqlCommand cmd)
+
+                await ExecuteReader(StoredProcedure.ATTRIBUTE_GROUP_SELECT, delegate (SqlCommand cmd)
                 {
                 }, delegate (SqlDataReader reader)
                 {
                     while (reader.Read())
                     {
-                        response.Data.Add(new Branch
+                        response.Data.Add(new AttributeGroup
                         {
                             Id = GetValue<int>(reader["Id"], 0),
                             NameAr = GetValue<string>(reader["NameAr"], ""),
                             Name = GetValue<string>(reader["Name"], ""),
-                            LocationDescription = GetValue<string>(reader["LocationDescription"]),
-                            IsActive = GetValue<bool>(reader["IsActive"], false),
-                            Latitude = GetValue<string>(reader["Latitude"], ""),
-                            Longitude = GetValue<string>(reader["Longitude"], "")
+                            IsActive = GetValue<bool>(reader["IsActive"], false)
                         });
                     }
                 });

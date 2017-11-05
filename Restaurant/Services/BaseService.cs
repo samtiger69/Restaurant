@@ -9,6 +9,14 @@ namespace Restaurant.Services
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString;
 
+        protected T GetValue<T>(object readerValue, T defaultValue = default(T))
+        {
+            if (readerValue == null || readerValue == DBNull.Value)
+                return defaultValue;
+            else
+                return (T)Convert.ChangeType(readerValue, typeof(T));
+        }
+
         protected async Task ExecuteNonQuery(string storedProcedure, Action<SqlCommand> fillCommand)
         {
             try

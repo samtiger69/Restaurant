@@ -202,8 +202,12 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AttributeController.cs" />
+    <Compile Include="Controllers\AttributeGroupController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\BranchController.cs" />
+    <Compile Include="Controllers\MealController.cs" />
+    <Compile Include="Controllers\MealTypeController.cs" />
     <Compile Include="Entities\Attribute.cs" />
     <Compile Include="Entities\AttributeGroup.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
@@ -217,17 +221,26 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Cache.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ErrorCode.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\BaseListModel.cs" />
+    <Compile Include="Models\MealListModel.cs" />
+    <Compile Include="Models\MealTypeListModel.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\RestaurantException.cs" />
+    <Compile Include="Models\StoredProcedure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\AttributeGroupService.cs" />
+    <Compile Include="Services\AttributeService.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\MealService.cs" />
+    <Compile Include="Services\MealTypeService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
