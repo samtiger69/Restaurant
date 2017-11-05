@@ -11,6 +11,26 @@ namespace Restaurant.Services
 {
     public class MealService : BaseService
     {
+        private static object lockObj = new Object();
+        private static volatile MealService _instance = null;
+
+        public static MealService GetInstance()
+        {
+            if (_instance == null)
+            {
+                lock (lockObj)
+                {
+                    if (_instance == null)
+                        _instance = new MealService();
+                }
+            }
+            return _instance;
+        }
+
+        private MealService()
+        {
+        }
+
         public Response<List<Meal>> List(Request request)
         {
             try

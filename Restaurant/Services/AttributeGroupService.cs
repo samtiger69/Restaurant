@@ -11,6 +11,26 @@ namespace Restaurant.Services
 {
     public class AttributeGroupService : BaseService
     {
+        private static object lockObj = new Object();
+        private static volatile AttributeGroupService _instance = null;
+
+        public static AttributeGroupService GetInstance()
+        {
+            if (_instance == null)
+            {
+                lock (lockObj)
+                {
+                    if (_instance == null)
+                        _instance = new AttributeGroupService();
+                }
+            }
+            return _instance;
+        }
+
+        private AttributeGroupService()
+        {
+        }
+
         public Response<List<AttributeGroup>> List(Request request)
         {
             try

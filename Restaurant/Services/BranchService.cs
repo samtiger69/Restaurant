@@ -11,16 +11,17 @@ namespace Restaurant.Services
 {
     public class BranchService : BaseService
     {
-        private static volatile object lockObj;
-        private static BranchService _instance = null;
+        private static object lockObj = new Object();
+        private static volatile BranchService _instance = null;
 
         public static BranchService GetInstance()
         {
-            lock (lockObj)
+            if (_instance == null)
             {
-                if(_instance == null)
+                lock (lockObj)
                 {
-                    lockObj = _instance = new BranchService();
+                    if (_instance == null)
+                        _instance = new BranchService();
                 }
             }
             return _instance;
@@ -28,7 +29,6 @@ namespace Restaurant.Services
 
         private BranchService()
         {
-
         }
 
         public Response<List<Branch>> List(Request request)
@@ -44,25 +44,25 @@ namespace Restaurant.Services
                         ErrorNumber = ErrorNumber.Success
                     }
                 };
-                
-                 ExecuteReader(StoredProcedure.BRANCH_SELECT, delegate (SqlCommand cmd)
-                {
-                }, delegate (SqlDataReader reader)
-                {
-                    while (reader.Read())
-                    {
-                        response.Data.Add(new Branch
-                        {
-                            Id = GetValue<int>(reader["Id"], 0),
-                            NameAr = GetValue<string>(reader["NameAr"], ""),
-                            Name = GetValue<string>(reader["Name"], ""),
-                            LocationDescription = GetValue<string>(reader["LocationDescription"]),
-                            IsActive = GetValue<bool>(reader["IsActive"], false),
-                            Latitude = GetValue<string>(reader["Latitude"], ""),
-                            Longitude = GetValue<string>(reader["Longitude"], "")
-                        });
-                    }
-                });
+
+                ExecuteReader(StoredProcedure.BRANCH_SELECT, delegate (SqlCommand cmd)
+               {
+               }, delegate (SqlDataReader reader)
+               {
+                   while (reader.Read())
+                   {
+                       response.Data.Add(new Branch
+                       {
+                           Id = GetValue<int>(reader["Id"], 0),
+                           NameAr = GetValue<string>(reader["NameAr"], ""),
+                           Name = GetValue<string>(reader["Name"], ""),
+                           LocationDescription = GetValue<string>(reader["LocationDescription"]),
+                           IsActive = GetValue<bool>(reader["IsActive"], false),
+                           Latitude = GetValue<string>(reader["Latitude"], ""),
+                           Longitude = GetValue<string>(reader["Longitude"], "")
+                       });
+                   }
+               });
                 return response;
             }
             catch (RestaurantException ex)

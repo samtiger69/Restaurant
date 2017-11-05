@@ -51,7 +51,7 @@ namespace Restaurant.Models
             {
                 if (MealTypes == null)
                 {
-                    var mealTypeService = new MealTypeService();
+                    var mealTypeService = MealTypeService.GetInstance();
                     var response = mealTypeService.List(new Request());
                     MealTypes = response.Data;
                 }
@@ -79,7 +79,7 @@ namespace Restaurant.Models
             {
                 if (Meals == null)
                 {
-                    var mealService = new MealService();
+                    var mealService = MealService.GetInstance();
                     var response = mealService.List(new Request());
                     Meals = response.Data;
                 }
@@ -107,7 +107,7 @@ namespace Restaurant.Models
             {
                 if (AttributeGroups == null)
                 {
-                    var attributeGroupService = new AttributeGroupService();
+                    var attributeGroupService = AttributeGroupService.GetInstance();
                     var response = attributeGroupService.List(new Request());
                     AttributeGroups = response.Data;
                 }
@@ -133,7 +133,7 @@ namespace Restaurant.Models
             {
                 if (AttributeGroups == null)
                 {
-                    var attributeService = new AttributeService();
+                    var attributeService = AttributeService.GetInstance();
                     var response = attributeService.List(new Request());
                     Attributes = response.Data;
                 }
