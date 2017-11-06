@@ -9,14 +9,14 @@ namespace Restaurant.Controllers
 {
     public class BranchController : BaseController
     {
-        [Authorize]
+        [CustomAuthorization]
         [HttpPost]
         public Response<List<Branch>> List(Request<BaseListModel> request)
         {
             try
             {
                 return new Response<List<Branch>>()
-                {
+                {                    
                     Data = Cache.GetBranches(request.Data),
                     ErrorCode = new ErrorCode
                     {
