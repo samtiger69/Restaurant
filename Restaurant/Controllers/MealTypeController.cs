@@ -56,13 +56,13 @@ namespace Restaurant.Controllers
         {
             try
             {
-                if (request == null)
+                if (request == null || request.Data == null)
                 {
                     throw new ArgumentNullException(nameof(request));
                 }
                 var mealType = MealTypeService.GetInstance();
                 TrimNames(request.Data);
-                ValidateCreateMealType(request.Data);
+                ValidateNames(request.Data);
                 return mealType.Create(request);
             }
             catch (RestaurantException ex)
@@ -93,12 +93,12 @@ namespace Restaurant.Controllers
         {
             try
             {
-                if (request == null)
+                if (request == null || request.Data == null)
                 {
                     throw new ArgumentNullException(nameof(request));
                 }
-                var mealType = MealTypeService.GetInstance();
-                return mealType.Update(request);
+                var mealTypeService = MealTypeService.GetInstance();
+                return mealTypeService.Update(request);
             }
             catch (RestaurantException ex)
             {

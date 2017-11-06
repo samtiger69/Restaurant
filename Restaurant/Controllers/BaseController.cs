@@ -11,71 +11,37 @@ namespace Restaurant.Controllers
 {
     public class BaseController : ApiController
     {
-        #region Branch_Helpers
-        protected void ValidateCreateBranch(Branch branch)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(branch.Name))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "Name cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-                
-                if (string.IsNullOrEmpty(branch.Name))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "NameAr cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-            }
-            catch (RestaurantException ex)
-            {
-                throw ex;
-            }
-        }
-        #endregion
-
-        #region MealType_Helpers
-        protected void ValidateCreateMealType(MealType mealType)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(mealType.Name))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "Name cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-
-                if (string.IsNullOrEmpty(mealType.Name))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "NameAr cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-            }
-            catch (RestaurantException ex)
-            {
-                throw ex;
-            }
-        }
-        #endregion
-
         #region Shared
+        protected void ValidateNames(BasicEntity entity)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(entity.Name))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "Name cannot be empty",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if (string.IsNullOrEmpty(entity.NameAr))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "NameAr cannot be empty",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
         protected void TrimNames(BasicEntity entity)
         {
             entity.Name = entity.Name.Trim();

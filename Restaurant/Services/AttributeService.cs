@@ -140,7 +140,8 @@ namespace Restaurant.Services
                 var result = ErrorNumber.Success;
                 ExecuteReader(StoredProcedure.ATTRIBUTE_UPDATE, delegate (SqlCommand cmd)
                 {
-                    if(!string.IsNullOrEmpty(request.Data.Name))
+                    cmd.Parameters.AddWithValue("@Id", request.Data.Id);
+                    if (!string.IsNullOrEmpty(request.Data.Name))
                     {
                         cmd.Parameters.AddWithValue("@Name", request.Data.Name);
                     }

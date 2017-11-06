@@ -53,9 +53,13 @@ namespace Restaurant.Controllers
         {
             try
             {
+                if (request == null || request.Data == null)
+                {
+                    throw new ArgumentNullException(nameof(request));
+                }
                 var branchService = BranchService.GetInstance();
                 TrimNames(request.Data);
-                ValidateCreateBranch(request.Data);
+                ValidateNames(request.Data);
                 return branchService.Create(request);
             }
             catch (RestaurantException ex)
@@ -86,6 +90,10 @@ namespace Restaurant.Controllers
         {
             try
             {
+                if (request == null || request.Data == null)
+                {
+                    throw new ArgumentNullException(nameof(request));
+                }
                 var branchService = BranchService.GetInstance();
                 return branchService.Update(request);
             }
