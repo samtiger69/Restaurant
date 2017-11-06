@@ -43,6 +43,38 @@ namespace Restaurant.Controllers
         }
         #endregion
 
+        #region MealType_Helpers
+        protected void ValidateCreateMealType(MealType mealType)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(mealType.Name))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "Name cannot be empty",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if (string.IsNullOrEmpty(mealType.Name))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "NameAr cannot be empty",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
         #region Shared
         protected void TrimNames(BasicEntity entity)
         {
