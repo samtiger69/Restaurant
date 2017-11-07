@@ -14,13 +14,13 @@ namespace Restaurant.Controllers
     public class AttributeController : BaseController
     {
         [Authorize]
-        public Response<List<Entities.Attribute>> List(Request<BaseListModel> request)
+        public Response<List<Entities.Attribute>> List(Request<BaseList> request)
         {
             try
             {
                 return new Response<List<Entities.Attribute>>()
                 {
-                    Data = Cache.GetAttributes(request.Data),
+                    Data = Cache.GetAttributes(request),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -89,7 +89,7 @@ namespace Restaurant.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public Response Update(Request<UpdateAttributeModel> request)
+        public Response Update(Request<AttributeUpdate> request)
         {
             try
             {

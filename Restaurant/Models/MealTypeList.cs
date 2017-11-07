@@ -5,8 +5,8 @@ using System.Web;
 
 namespace Restaurant.Models
 {
-    public class MealListModel : BaseListModel
+    public class MealTypeList : BaseList
     {
-        public int? MealTypeId { get; set; }
+        public int? BranchId { get; set; }
     }
 }

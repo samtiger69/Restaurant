@@ -3,7 +3,6 @@ using Restaurant.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Restaurant.Models
 {
@@ -19,7 +18,7 @@ namespace Restaurant.Models
         {
             Branches = null;
         }
-        public static List<Branch> GetBranches(BaseListModel request)
+        public static List<Branch> GetBranches(Request<BaseList> request)
         {
             try
             {
@@ -45,7 +44,7 @@ namespace Restaurant.Models
         {
             MealTypes = null;
         }
-        public static List<MealType> GetMealTypes(MealTypeListModel request)
+        public static List<MealType> GetMealTypes(Request<MealTypeList> request)
         {
             try
             {
@@ -55,8 +54,19 @@ namespace Restaurant.Models
                     var response = mealTypeService.List(new Request());
                     MealTypes = response.Data;
                 }
-                return MealTypes.Where(m => CheckBasicFilter(m, request) &&
-                    (request == null || !request.BranchId.HasValue || m.BranchId == request.BranchId))
+                Request<BaseList> baseFilter;
+                if (request == null || request.Data == null)
+                    baseFilter = new Request<BaseList>
+                    {
+                        Data = new BaseList()
+                    };
+                else
+                    baseFilter = new Request<BaseList>
+                    {
+                        Data = request.Data
+                    };
+                return MealTypes.Where(m => CheckBasicFilter(m, baseFilter) &&
+                    (request == null || request.Data == null || !request.Data.BranchId.HasValue || m.BranchId == request.Data.BranchId))
                     .ToList();
             }
             catch (RestaurantException ex)
@@ -73,7 +83,7 @@ namespace Restaurant.Models
         {
             Meals = null;
         }
-        public static List<Meal> GetMeals(MealListModel request)
+        public static List<Meal> GetMeals(Request<MealList> request)
         {
             try
             {
@@ -83,8 +93,19 @@ namespace Restaurant.Models
                     var response = mealService.List(new Request());
                     Meals = response.Data;
                 }
-                return Meals.Where(m => CheckBasicFilter(m, request) &&
-                    (request == null || !request.MealTypeId.HasValue || m.MealTypeId == request.MealTypeId))
+                Request<BaseList> baseFilter;
+                if (request == null || request.Data == null)
+                    baseFilter = new Request<BaseList>
+                    {
+                        Data = new BaseList()
+                    };
+                else
+                    baseFilter = new Request<BaseList>
+                    {
+                        Data = request.Data
+                    };
+                return Meals.Where(m => CheckBasicFilter(m, baseFilter) &&
+                    (request == null || request.Data == null || !request.Data.MealTypeId.HasValue || m.MealTypeId == request.Data.MealTypeId))
                     .ToList();
             }
             catch (RestaurantException ex)
@@ -101,7 +122,7 @@ namespace Restaurant.Models
         {
             AttributeGroups = null;
         }
-        public static List<AttributeGroup> GetAttributeGroups(BaseListModel request)
+        public static List<AttributeGroup> GetAttributeGroups(Request<BaseList> request)
         {
             try
             {
@@ -127,7 +148,7 @@ namespace Restaurant.Models
         {
             Attributes = null;
         }
-        public static List<Entities.Attribute> GetAttributes(BaseListModel request)
+        public static List<Entities.Attribute> GetAttributes(Request<BaseList> request)
         {
             try
             {
@@ -149,12 +170,12 @@ namespace Restaurant.Models
             }
         }
 
-        private static bool CheckBasicFilter(BasicEntity entity, BaseListModel filter)
+        private static bool CheckBasicFilter(BasicEntity entity, Request<BaseList> filter)
         {
-            return (filter == null) ||
-                        ((!filter.Id.HasValue || entity.Id == filter.Id.Value)
-                        && (string.IsNullOrEmpty(filter.Name) || entity.Name == filter.Name) &&
-                        (string.IsNullOrEmpty(filter.NameAr) || entity.NameAr == filter.NameAr));
+            return (filter == null || filter.Data == null) ||
+                        ((!filter.Data.Id.HasValue || entity.Id == filter.Data.Id.Value)
+                        && (string.IsNullOrEmpty(filter.Data.Name) || entity.Name == filter.Data.Name) &&
+                        (string.IsNullOrEmpty(filter.Data.NameAr) || entity.NameAr == filter.Data.NameAr));
         }
     }
 }

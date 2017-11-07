@@ -2,9 +2,9 @@
 
 namespace Restaurant.Models
 {
-    public class UpdateMealModel : BasicEntity
+    public class AttributeUpdate : BasicEntity
     {
-        public int? MealTypeId { get; set; }
+        public int? GroupId { get; set; }
         public decimal? Price { get; set; }
     }
 }

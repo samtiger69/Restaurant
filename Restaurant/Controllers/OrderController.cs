@@ -3,24 +3,21 @@ using Restaurant.Models;
 using Restaurant.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
-    public class MealTypeController : BaseController
+    public class OrderController : BaseController
     {
         [Authorize]
-        public Response<List<MealType>> List(Request<MealTypeList> request)
+        [HttpPost]
+        public Response<List<Branch>> List(Request<BaseList> request)
         {
             try
             {
-                return new Response<List<MealType>>()
+                return new Response<List<Branch>>()
                 {
-                    Data = Cache.GetMealTypes(request),
+                    Data = Cache.GetBranches(request),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -30,7 +27,7 @@ namespace Restaurant.Controllers
             }
             catch (RestaurantException ex)
             {
-                return new Response<List<MealType>>()
+                return new Response<List<Branch>>()
                 {
                     Data = null,
                     ErrorCode = ex.ErrorCode
@@ -38,7 +35,7 @@ namespace Restaurant.Controllers
             }
             catch (Exception e)
             {
-                return new Response<List<MealType>>()
+                return new Response<List<Branch>>()
                 {
                     Data = null,
                     ErrorCode = new ErrorCode
@@ -52,7 +49,7 @@ namespace Restaurant.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public Response<MealType> Create(Request<MealType> request)
+        public Response<int> Create(Request<OrderCreate> request)
         {
             try
             {
@@ -60,24 +57,23 @@ namespace Restaurant.Controllers
                 {
                     throw new ArgumentNullException(nameof(request));
                 }
-                var mealType = MealTypeService.GetInstance();
-                TrimNames(request.Data);
-                ValidateNames(request.Data);
-                return mealType.Create(request);
+                var orderService = OrderService.GetInstance();
+                ValidateCreateOrder(request.Data);
+                return orderService.Create(request);
             }
             catch (RestaurantException ex)
             {
-                return new Response<MealType>
+                return new Response<int>
                 {
-                    Data = null,
+                    Data = -1,
                     ErrorCode = ex.ErrorCode
                 };
             }
             catch (Exception e)
             {
-                return new Response<MealType>
+                return new Response<int>
                 {
-                    Data = null,
+                    Data = -1,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = e.Message,
@@ -89,7 +85,7 @@ namespace Restaurant.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public Response Update(Request<MealTypeUpdate> request)
+        public Response Update(Request<OrderUpdate> request)
         {
             try
             {
@@ -97,8 +93,8 @@ namespace Restaurant.Controllers
                 {
                     throw new ArgumentNullException(nameof(request));
                 }
-                var mealTypeService = MealTypeService.GetInstance();
-                return mealTypeService.Update(request);
+                var orderService = OrderService.GetInstance();
+                return orderService.Update(request);
             }
             catch (RestaurantException ex)
             {

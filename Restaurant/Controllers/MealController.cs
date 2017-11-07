@@ -14,13 +14,13 @@ namespace Restaurant.Controllers
     public class MealController : BaseController
     {
         [Authorize]
-        public Response<List<Meal>> List(Request<MealListModel> request)
+        public Response<List<Meal>> List(Request<MealList> request)
         {
             try
             {
                 return new Response<List<Meal>>()
                 {
-                    Data = Cache.GetMeals(request.Data),
+                    Data = Cache.GetMeals(request),
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -89,7 +89,7 @@ namespace Restaurant.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public Response Update(Request<UpdateMealModel> request)
+        public Response Update(Request<MealUpdate> request)
         {
             try
             {

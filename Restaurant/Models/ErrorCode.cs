@@ -24,6 +24,20 @@
 
         Exists = -2,
 
+        BranchDoesNotExist = -3,
+
+        UserDoesNotExist = -4,
+
+        MealDoesNotExist = -5,
+
+        OrderDoesNotExist = -6,
+
+        AttributeDoesNotExist = -7,
+
+        OrderMealDoesNotExist = -8,
+
+        AccessDenied = -100,
+
         GeneralError = 100,
 
         EmptyRequiredField = 1,

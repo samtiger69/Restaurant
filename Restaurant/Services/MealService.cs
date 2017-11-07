@@ -124,7 +124,7 @@ namespace Restaurant.Services
             }
         }
 
-        public Response Update(Request<UpdateMealModel> request)
+        public Response Update(Request<MealUpdate> request)
         {
             try
             {

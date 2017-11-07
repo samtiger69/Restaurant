@@ -43,5 +43,17 @@ namespace Restaurant.Models
         public const string ORDER_CREATE = "Order_Create";
         public const string ORDER_UPDATE = "Order_Update";
         #endregion
+
+        #region OrderMeal
+        public const string ORDER_MEAL_SELECT = "OrderMeal_Select";
+        public const string ORDER_MEAL_CREATE = "OrderMeal_Create";
+        public const string ORDER_MEAL_UPDATE = "OrderMeal_Update";
+        #endregion
+
+        #region OrderMealAttribute
+        public const string ORDER_MEAL_ATTRIBUTE_SELECT = "OrderMealAttribute_Select";
+        public const string ORDER_MEAL_ATTRIBUTE_CREATE = "OrderMealAttribute_Create";
+        public const string ORDER_MEAL_ATTRIBUTE_UPDATE = "OrderMealAttribute_Update";
+        #endregion
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Restaurant.Models
 {
-    public class MealTypeUpdateModel : BasicEntity
+    public class MealTypeUpdate : BasicEntity
     {
         public string Description { get; set; }
         public int? BranchId { get; set; }

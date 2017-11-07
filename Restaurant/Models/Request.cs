@@ -1,4 +1,6 @@
-﻿namespace Restaurant.Models
+﻿using System;
+
+namespace Restaurant.Models
 {
     public class Request
     {
