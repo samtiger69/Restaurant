@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Restaurant.Models
+﻿namespace Restaurant.Models
 {
     public static class StoredProcedure
     {
@@ -54,6 +49,12 @@ namespace Restaurant.Models
         public const string ORDER_MEAL_ATTRIBUTE_SELECT = "OrderMealAttribute_Select";
         public const string ORDER_MEAL_ATTRIBUTE_CREATE = "OrderMealAttribute_Create";
         public const string ORDER_MEAL_ATTRIBUTE_UPDATE = "OrderMealAttribute_Update";
+        #endregion
+
+        #region OrderAddress
+        public const string ORDER_ADDRESS_SELECT = "OrderAddress_Select";
+        public const string ORDER_ADDRESS_CREATE = "OrderAddress_Create";
+        public const string ORDER_ADDRESS_UPDATE = "OrderAddress_Update";
         #endregion
     }
 }

@@ -3,10 +3,6 @@ using Restaurant.Models;
 using Restaurant.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Restaurant.Controllers
@@ -14,6 +10,7 @@ namespace Restaurant.Controllers
     public class MealTypeController : BaseController
     {
         [Authorize]
+        [HttpPost]
         public Response<List<MealType>> List(Request<MealTypeList> request)
         {
             try
@@ -56,10 +53,7 @@ namespace Restaurant.Controllers
         {
             try
             {
-                if (request == null || request.Data == null)
-                {
-                    throw new ArgumentNullException(nameof(request));
-                }
+                ValidateBaseRequest(request);
                 var mealType = MealTypeService.GetInstance();
                 TrimNames(request.Data);
                 ValidateNames(request.Data);
@@ -93,10 +87,7 @@ namespace Restaurant.Controllers
         {
             try
             {
-                if (request == null || request.Data == null)
-                {
-                    throw new ArgumentNullException(nameof(request));
-                }
+                ValidateBaseRequest(request);
                 var mealTypeService = MealTypeService.GetInstance();
                 return mealTypeService.Update(request);
             }

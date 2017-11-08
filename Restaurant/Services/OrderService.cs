@@ -90,6 +90,7 @@ namespace Restaurant.Services
                     cmd.Parameters.AddWithValue("@UserId", request.Data.UserId);
                     cmd.Parameters.AddWithValue("@BranchId", request.Data.BranchId);
                     cmd.Parameters.AddWithValue("@Status", OrderStatus.New);
+                    cmd.Parameters.AddWithValue("@IsPickUp", OrderStatus.New);
                     if (!string.IsNullOrEmpty(request.Data.Notes))
                         cmd.Parameters.AddWithValue("@Notes", request.Data.Notes);
                 },
@@ -118,6 +119,20 @@ namespace Restaurant.Services
                             ErrorNumber = ErrorNumber.BranchDoesNotExist
                         }
                     };
+
+                if (!request.Data.IsPickUp)
+                {
+                    ExecuteNonQuery(StoredProcedure.ORDER_ADDRESS_CREATE, delegate (SqlCommand cmd)
+                    {
+                        cmd.Parameters.AddWithValue("@OrderId", request.Data);
+                        cmd.Parameters.AddWithValue("@Area", request.Data.Address.Area);
+                        cmd.Parameters.AddWithValue("@Street", request.Data.Address.Street);
+                        cmd.Parameters.AddWithValue("@Building", request.Data.Address.Building);
+                        cmd.Parameters.AddWithValue("@Floor", request.Data.Address.Floor);
+                        cmd.Parameters.AddWithValue("@OfficeNumber", request.Data.Address.OfficeNumber);
+                    });
+                }
+
                 foreach (var orderMeal in request.Data.OrderMeals)
                 {
                     ExecuteReader(StoredProcedure.ORDER_MEAL_CREATE, delegate (SqlCommand cmd)

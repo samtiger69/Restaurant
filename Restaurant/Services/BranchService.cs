@@ -88,6 +88,7 @@ namespace Restaurant.Services
 
                 ExecuteReader(StoredProcedure.BRANCH_CREATE, delegate (SqlCommand cmd)
                 {
+                    cmd.Parameters.AddWithValue("@UserId", request.UserId);
                     cmd.Parameters.AddWithValue("@Name", request.Data.Name);
                     cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
                     if (!string.IsNullOrEmpty(request.Data.LocationDescription))
@@ -142,6 +143,7 @@ namespace Restaurant.Services
                 ExecuteReader(StoredProcedure.BRANCH_UPDATE, delegate (SqlCommand cmd)
                 {
                     cmd.Parameters.AddWithValue("@Id", request.Data.Id);
+                    cmd.Parameters.AddWithValue("@UserId", request.UserId);
                     if (!string.IsNullOrEmpty(request.Data.Name))
                         cmd.Parameters.AddWithValue("@Name", request.Data.Name.Trim());
                     if (!string.IsNullOrEmpty(request.Data.NameAr))

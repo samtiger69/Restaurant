@@ -3,9 +3,6 @@ using Restaurant.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Restaurant.Services
 {
@@ -90,6 +87,7 @@ namespace Restaurant.Services
 
                 ExecuteReader(StoredProcedure.MEAL_CREATE, delegate (SqlCommand cmd)
                 {
+                    cmd.Parameters.AddWithValue("@UserId", request.UserId);
                     cmd.Parameters.AddWithValue("@Name", request.Data.Name);
                     cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
                     cmd.Parameters.AddWithValue("@Price", request.Data.Price);
@@ -140,7 +138,8 @@ namespace Restaurant.Services
                 ExecuteReader(StoredProcedure.MEAL_UPDATE, delegate (SqlCommand cmd)
                 {
                     cmd.Parameters.AddWithValue("@Id", request.Data.Id);
-                    if(!string.IsNullOrEmpty(request.Data.Name))
+                    cmd.Parameters.AddWithValue("@UserId", request.UserId);
+                    if (!string.IsNullOrEmpty(request.Data.Name))
                     {
                         cmd.Parameters.AddWithValue("@Name", request.Data.Name);
                     }

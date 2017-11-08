@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Restaurant.Models
+﻿namespace Restaurant.Models
 {
     public class Enums
     {
@@ -25,5 +20,37 @@ namespace Restaurant.Models
             Delivered = 6,
             Blocked = 8
         }
+
+        public enum ActionLog
+        {
+            CreateOrder = 1,
+            UpdateOrder = 2,
+
+            CraeteMeal = 3,
+            UpdateMeal = 4,
+
+            CreateMealType = 5,
+            UpdateMealType = 6,
+
+            CreateAttributeGroup = 7,
+            UpdateAttributeGroup = 8,
+
+            CreateAttribute = 9,
+            UpdateAttribute = 10,
+
+            CreateBranch = 11,
+            UpdateBranch = 12
+        }
+
+        public enum SourceType
+        {
+            Branch = 1,
+            MealType = 2,
+            Meal = 3,
+            AttributeGroup = 4,
+            Attribute = 5,
+            Order = 6
+        }
+
     }
 }

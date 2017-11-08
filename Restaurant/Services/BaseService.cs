@@ -17,7 +17,7 @@ namespace Restaurant.Services
                 return (T)Convert.ChangeType(readerValue, typeof(T));
         }
 
-        protected async Task ExecuteNonQuery(string storedProcedure, Action<SqlCommand> fillCommand)
+        protected void ExecuteNonQuery(string storedProcedure, Action<SqlCommand> fillCommand)
         {
             try
             {
@@ -30,8 +30,8 @@ namespace Restaurant.Services
                         Connection = connection
                     };
                     fillCommand(command);
-                    await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
+                    connection.Open();
+                    command.ExecuteNonQuery();
                 }
             }
             catch (Exception e)

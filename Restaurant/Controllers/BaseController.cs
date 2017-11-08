@@ -1,6 +1,9 @@
 ﻿using Restaurant.Entities;
 using Restaurant.Models;
+using System;
+using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
 
 namespace Restaurant.Controllers
 {
@@ -78,12 +81,89 @@ namespace Restaurant.Controllers
                             ErrorNumber = ErrorNumber.EmptyRequiredField
                         }
                     };
+                if(!orderCreate.IsPickUp)
+                {
+                    if(orderCreate.Address == null)
+                        throw new RestaurantException
+                        {
+                            ErrorCode = new ErrorCode
+                            {
+                                ErrorMessage = "Address cannot be empty in case of delivery",
+                                ErrorNumber = ErrorNumber.EmptyRequiredField
+                            }
+                        };
+                    orderCreate.Address.Area = orderCreate.Address.Area.Trim();
+                    orderCreate.Address.Street = orderCreate.Address.Street.Trim();
+                    orderCreate.Address.Building = orderCreate.Address.Building.Trim();
+                    orderCreate.Address.OfficeNumber = orderCreate.Address.OfficeNumber.Trim();
+                }
                 orderCreate.Notes = orderCreate.Notes.Trim();
             }
             catch (RestaurantException ex)
             {
                 throw ex;
             }
+        }
+
+        protected void ValidateFields(ModelStateDictionary modelState)
+        {
+            try
+            {
+                if (!modelState.IsValid)
+                {
+                    var message = "";
+                    foreach (var error in modelState.Values)
+                    {
+                        foreach (var violation in error.Errors)
+                        {
+                            message = violation.ErrorMessage + ",";
+                        }
+                        message = message.Substring(0, message.Length - 1);
+                    }
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = message,
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+                }
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateBaseRequest(Request request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+            if (string.IsNullOrEmpty(request.UserId))
+                throw new RestaurantException
+                {
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "Empty UserId",
+                        ErrorNumber = ErrorNumber.EmptyRequiredField
+                    }
+                };
+        }
+
+        protected void ValidateBaseRequest<T>(Request<T> request, bool ignoreData = false)
+        {
+            if (request == null || (!ignoreData && request.Data == null))
+                throw new ArgumentNullException(nameof(request));
+            if (string.IsNullOrEmpty(request.UserId))
+                throw new RestaurantException
+                {
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "Empty UserId",
+                        ErrorNumber = ErrorNumber.EmptyRequiredField
+                    }
+                };
         }
         #endregion
     }

@@ -15,6 +15,7 @@ namespace Restaurant.Controllers
         {
             try
             {
+                ValidateBaseRequest(request,true);
                 return new Response<List<Branch>>()
                 {
                     Data = Cache.GetBranches(request),
@@ -47,18 +48,15 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpPost]
         public Response<int> Create(Request<OrderCreate> request)
         {
             try
             {
-                if (request == null || request.Data == null)
-                {
-                    throw new ArgumentNullException(nameof(request));
-                }
-                var orderService = OrderService.GetInstance();
+                ValidateBaseRequest(request);
                 ValidateCreateOrder(request.Data);
+                var orderService = OrderService.GetInstance();
                 return orderService.Create(request);
             }
             catch (RestaurantException ex)
@@ -89,10 +87,7 @@ namespace Restaurant.Controllers
         {
             try
             {
-                if (request == null || request.Data == null)
-                {
-                    throw new ArgumentNullException(nameof(request));
-                }
+                ValidateBaseRequest(request);
                 var orderService = OrderService.GetInstance();
                 return orderService.Update(request);
             }

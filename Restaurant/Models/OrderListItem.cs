@@ -7,11 +7,13 @@ namespace Restaurant.Models
     public class OrderListItem
     {
         public int Id { get; set; }
-        public DateTime OrderDate { get; set; }
-        public virtual List<OrderListItemMeal> Meals { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime UpdateDate { get; set; }
         public decimal TotalPrice { get; set; }
         public OrderStatus Status { get; set; }
+        public OrderUpdatedByInfo OrderedBy { get; set; }
         public OrderUpdatedByInfo UpdatedBy { get; set; }
+        public virtual List<OrderListItemMeal> Meals { get; set; }
     }
 
     public class OrderListItemMeal
