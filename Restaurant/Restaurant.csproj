@@ -215,6 +215,9 @@
     <Compile Include="Entities\BasicEntity.cs" />
     <Compile Include="Entities\Branch.cs" />
     <Compile Include="Entities\Meal.cs" />
+    <Compile Include="Entities\MealAttribute.cs" />
+    <Compile Include="Entities\MealAttributeGroup.cs" />
+    <Compile Include="Entities\MealInfo.cs" />
     <Compile Include="Entities\MealType.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Global.asax.cs">
@@ -247,6 +250,8 @@
     <Compile Include="Services\AttributeService.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\MealAttributeGroupService.cs" />
+    <Compile Include="Services\MealAttributeService.cs" />
     <Compile Include="Services\MealService.cs" />
     <Compile Include="Services\MealTypeService.cs" />
     <Compile Include="Services\OrderService.cs" />

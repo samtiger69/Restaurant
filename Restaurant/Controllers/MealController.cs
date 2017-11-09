@@ -47,6 +47,44 @@ namespace Restaurant.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost]
+        public Response<MealInfo> Get(Request<int> request)
+        {
+            try
+            {
+                return new Response<MealInfo>()
+                {
+                    Data = Cache.GetMealInfo(request),
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "",
+                        ErrorNumber = ErrorNumber.Success
+                    }
+                };
+            }
+            catch (RestaurantException ex)
+            {
+                return new Response<MealInfo>()
+                {
+                    Data = null,
+                    ErrorCode = ex.ErrorCode
+                };
+            }
+            catch (Exception e)
+            {
+                return new Response<MealInfo>()
+                {
+                    Data = null,
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = e.Message,
+                        ErrorNumber = ErrorNumber.GeneralError
+                    }
+                };
+            }
+        }
+
         [Authorize(Roles = "admin")]
         [HttpPost]
         public Response<Meal> Create(Request<Meal> request)

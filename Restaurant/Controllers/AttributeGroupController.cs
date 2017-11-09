@@ -7,9 +7,10 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AttributeGroupController : BaseController
     {
-        [Authorize]
+        [HttpPost]
         public Response<List<AttributeGroup>> List(Request<BaseList> request)
         {
             try
@@ -46,7 +47,6 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
         [HttpPost]
         public Response<AttributeGroup> Create(Request<AttributeGroup> request)
         {
@@ -80,7 +80,6 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
         [HttpPost]
         public Response Update(Request<AttributeGroup> request)
         {

@@ -1,7 +1,6 @@
 ﻿using Restaurant.Entities;
 using Restaurant.Models;
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 

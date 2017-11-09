@@ -21,6 +21,14 @@
         public const string MEAL_UPDATE = "Meal_Update";
         #endregion
 
+        #region MealAttribute
+        public const string MEAL_ATTRIBUTE_SELECT = "MealAttribute_Select";
+        #endregion
+
+        #region MealAttributeGroup
+        public const string MEAL_ATTRIBUTE_GROUP_SELECT = "MealGroupAttribute_Select";
+        #endregion
+
         #region Attribute
         public const string ATTRIBUTE_SELECT = "Attribute_Select";
         public const string ATTRIBUTE_CREATE = "Attribute_Create";
@@ -56,5 +64,6 @@
         public const string ORDER_ADDRESS_CREATE = "OrderAddress_Create";
         public const string ORDER_ADDRESS_UPDATE = "OrderAddress_Update";
         #endregion
+
     }
 }

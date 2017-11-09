@@ -8,11 +8,15 @@ namespace Restaurant.Models
 {
     public class Cache
     {
+        #region Attributes
         private static List<Branch> Branches;
         private static List<MealType> MealTypes;
         private static List<Meal> Meals;
         private static List<AttributeGroup> AttributeGroups;
         private static List<Entities.Attribute> Attributes;
+        private static List<MealAttributeGroup> MealAttributeGroups;
+        private static List<MealAttribute> MealAttributes;
+        #endregion
 
         public static void ResetBranches()
         {
@@ -82,6 +86,8 @@ namespace Restaurant.Models
         public static void ResetMeals()
         {
             Meals = null;
+            MealAttributes = null;
+            MealAttributeGroups = null;
         }
         public static List<Meal> GetMeals(Request<MealList> request)
         {
@@ -107,6 +113,50 @@ namespace Restaurant.Models
                 return Meals.Where(m => CheckBasicFilter(m, baseFilter) &&
                     (request == null || request.Data == null || !request.Data.MealTypeId.HasValue || m.MealTypeId == request.Data.MealTypeId))
                     .ToList();
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static List<MealAttribute> GetMealAttributes(int mealId)
+        {
+            try
+            {
+                if (MealAttributes == null)
+                {
+                    var mealAttributeService = MealAttributeService.GetInstance();
+                    var response = mealAttributeService.List(new Request());
+                    MealAttributes = response.Data;
+                }
+                return MealAttributes.Where(m => m.MealId == mealId).ToList();
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static List<MealAttributeGroup> GetMealAttributeGroups(int mealId)
+        {
+            try
+            {
+                if (MealAttributeGroups == null)
+                {
+                    var mealAttributeGroupService = MealAttributeGroupService.GetInstance();
+                    var response = mealAttributeGroupService.List(new Request());
+                    MealAttributeGroups = response.Data;
+                }
+                return MealAttributeGroups.Where(m => m.MealId == mealId).ToList();
             }
             catch (RestaurantException ex)
             {
@@ -148,7 +198,7 @@ namespace Restaurant.Models
         {
             Attributes = null;
         }
-        public static List<Entities.Attribute> GetAttributes(Request<BaseList> request)
+        public static List<Entities.Attribute> GetAttributes(Request<BaseList> request, int? groupId = null)
         {
             try
             {
@@ -158,7 +208,43 @@ namespace Restaurant.Models
                     var response = attributeService.List(new Request());
                     Attributes = response.Data;
                 }
-                return Attributes.Where(m => CheckBasicFilter(m,request)).ToList();
+                return Attributes.Where(m => CheckBasicFilter(m,request) && m.GroupId == groupId).ToList();
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static MealInfo GetMealInfo(Request<int> request)
+        {
+            try
+            {
+                var mealInfo = new MealInfo();
+
+                var mealAttributes = GetMealAttributes(request.Data);
+
+                var mealAttributeGroups = GetMealAttributeGroups(request.Data);
+
+                foreach (var mealAttributeGroup in mealAttributeGroups)
+                {
+                    var attributeGroups = GetAttributeGroups(new Request<BaseList> { UserId = request.UserId, Data = new BaseList { Id = request.Data } });
+                    foreach (var attributeGroup in attributeGroups)
+                    {
+                        attributeGroup.Attributes = GetAttributes(new Request<BaseList>(), mealAttributeGroup.AttributeGroupId);
+                        mealInfo.AttributeGroups.Add(attributeGroup);
+                    }
+                }
+
+                foreach (var attribute in mealAttributes)
+                {
+                    mealInfo.Attributes.Add(GetAttributes(new Request<BaseList>() { UserId = request.UserId, Data = new BaseList { Id = attribute.AttributeId } }).First());
+                }
+                return mealInfo;
             }
             catch (RestaurantException ex)
             {

@@ -28,6 +28,91 @@ namespace Restaurant.Services
         {
         }
 
+        //public Response<MealInfo> Info(Request<int> request)
+        //{
+        //    try
+        //    {
+        //        var response = new Response<MealInfo>
+        //        {
+        //            ErrorCode = new ErrorCode
+        //            {
+        //                ErrorMessage = "",
+        //                ErrorNumber = ErrorNumber.Success
+        //            }
+        //        };
+
+        //        ExecuteReader(StoredProcedure.MEAL_INFO, delegate (SqlCommand cmd)
+        //        {
+        //        }, delegate (SqlDataReader reader)
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                response.Data = new MealInfo
+        //                {
+        //                    Id = GetValue(reader["Id"], 0),
+        //                    NameAr = GetValue(reader["NameAr"], ""),
+        //                    Name = GetValue(reader["Name"], ""),
+        //                    IsActive = GetValue(reader["IsActive"], false),
+        //                    MealTypeId = GetValue(reader["MealTypeId"], 0),
+        //                    Price = GetValue<decimal>(reader["Price"], 0)
+        //                };
+        //            }
+
+        //            if (response.Data == null)
+        //            {
+        //                throw new RestaurantException
+        //                {
+        //                    ErrorCode = new ErrorCode
+        //                    {
+        //                        ErrorMessage = "Meal not found",
+        //                        ErrorNumber = ErrorNumber.NotFound
+        //                    }
+        //                };
+        //            }
+
+        //            reader.NextResult();
+        //            var attributes = new List<Entities.Attribute>();
+        //            while (reader.Read())
+        //            {
+        //                attributes.Add(new Entities.Attribute
+        //                {
+        //                    Id = GetValue<int>(reader["Id"], 0),
+        //                    Name = GetValue<string>(reader["Name"], ""),
+        //                    NameAr = GetValue<string>(reader["NameAr"], ""),
+        //                    Price = GetValue<decimal>(reader["Price"], 0),
+        //                    GroupId = GetValue<int?>(reader["GroupId"], null),
+        //                    IsActive = GetValue<bool>(reader["IsActive"], true)
+        //                });
+        //            }
+
+        //            reader.NextResult();
+        //            response.Data.AttributeGroups = new List<AttributeGroup>();
+        //            while (reader.Read())
+        //            {
+        //                var groupId = GetValue<int>(reader["Id"]);
+        //                response.Data.AttributeGroups.Add(new AttributeGroup
+        //                {
+        //                    Id = groupId,
+        //                    Name = GetValue<string>(reader["Name"], ""),
+        //                    NameAr = GetValue<string>(reader["NameAr"], ""),
+        //                    IsActive = GetValue<bool>(reader["IsActive"], true),
+        //                    Attributes = attributes.Where(m => m.GroupId == groupId).ToList()
+        //                });
+        //            }
+        //            response.Data.Attributes = attributes.Where(m => m.GroupId == null).ToList();
+        //        });
+        //        return response;
+        //    }
+        //    catch (RestaurantException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
+
         public Response<List<Meal>> List(Request request)
         {
             try
@@ -50,11 +135,11 @@ namespace Restaurant.Services
                     {
                         response.Data.Add(new Meal
                         {
-                            Id = GetValue<int>(reader["Id"], 0),
-                            NameAr = GetValue<string>(reader["NameAr"], ""),
-                            Name = GetValue<string>(reader["Name"], ""),
-                            IsActive = GetValue<bool>(reader["IsActive"], false),
-                            MealTypeId = GetValue<int>(reader["MealTypeId"], 0),
+                            Id = GetValue(reader["Id"], 0),
+                            NameAr = GetValue(reader["NameAr"], ""),
+                            Name = GetValue(reader["Name"], ""),
+                            IsActive = GetValue(reader["IsActive"], false),
+                            MealTypeId = GetValue(reader["MealTypeId"], 0),
                             Price = GetValue<decimal>(reader["Price"], 0)
                         });
                     }
@@ -143,7 +228,7 @@ namespace Restaurant.Services
                     {
                         cmd.Parameters.AddWithValue("@Name", request.Data.Name);
                     }
-                    if(!string.IsNullOrEmpty(request.Data.NameAr))
+                    if (!string.IsNullOrEmpty(request.Data.NameAr))
                     {
                         cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
                     }
@@ -168,7 +253,7 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        result = GetValue<ErrorNumber>(reader["Result"],ErrorNumber.Success);
+                        result = GetValue(reader["Result"], ErrorNumber.Success);
                     }
                 });
                 if (result == ErrorNumber.NotFound)
@@ -176,7 +261,7 @@ namespace Restaurant.Services
                     {
                         ErrorCode = new ErrorCode
                         {
-                            ErrorMessage = string.Format("No such meal with id: {0} exists in the db",request.Data.Id),
+                            ErrorMessage = string.Format("No such meal with id: {0} exists in the db", request.Data.Id),
                             ErrorNumber = ErrorNumber.NotFound
                         }
                     };
