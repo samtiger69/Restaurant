@@ -81,7 +81,7 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, branch_admin, delivery_man")]
         [HttpPost]
         public Response Update(Request<OrderUpdate> request)
         {

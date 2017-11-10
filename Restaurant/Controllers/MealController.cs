@@ -85,7 +85,7 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, branch_admin")]
         [HttpPost]
         public Response<Meal> Create(Request<Meal> request)
         {
@@ -119,7 +119,7 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, branch_admin")]
         [HttpPost]
         public Response Update(Request<MealUpdate> request)
         {

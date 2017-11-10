@@ -39,7 +39,10 @@
             UpdateAttribute = 10,
 
             CreateBranch = 11,
-            UpdateBranch = 12
+            UpdateBranch = 12,
+
+            OrderDeliveryCreate = 13,
+            OrderDeliveryUpdate = 14
         }
 
         public enum SourceType
@@ -49,7 +52,8 @@
             Meal = 3,
             AttributeGroup = 4,
             Attribute = 5,
-            Order = 6
+            Order = 6,
+            OrderDelivery = 7
         }
 
     }

@@ -36,6 +36,10 @@
 
         OrderMealDoesNotExist = -8,
 
+        DeliveryUserNotInOrderBranch = -9,
+
+        UserNotBranchAdmin = -10,
+
         AccessDenied = -100,
 
         GeneralError = 100,
