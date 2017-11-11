@@ -101,15 +101,7 @@ namespace Restaurant.Services
                         response.Data.Id = GetValue<int>(reader["Result"]);
                     }
                 });
-                if (response.Data.Id == (int)ErrorNumber.Exists)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "A meal type with the same name/nameAr already exists in the db",
-                            ErrorNumber = ErrorNumber.Exists
-                        }
-                    };
+                HandleErrorCode((ErrorNumber)response.Data.Id);
                 Cache.ResetMealTypes();
                 return response;
             }
@@ -157,18 +149,10 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        result = GetValue<ErrorNumber>(reader["Result"], ErrorNumber.Success);
+                        result = GetValue(reader["Result"], ErrorNumber.Success);
                     }
                 });
-                if (result == ErrorNumber.NotFound)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = string.Format("There isn't a meal type with the id: {0} in the db", request.Data.Id),
-                            ErrorNumber = ErrorNumber.NotFound
-                        }
-                    };
+                HandleErrorCode(result);
                 Cache.ResetMealTypes();
                 return response;
             }

@@ -65,24 +65,8 @@ namespace Restaurant.Services
                         response.Data = GetValue<int>(reader["Result"]);
                     }
                 });
-                if (response.Data == (int)ErrorNumber.UserDoesNotExist)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "User does not exist",
-                            ErrorNumber = ErrorNumber.UserDoesNotExist
-                        }
-                    };
-                if (response.Data == (int)ErrorNumber.BranchDoesNotExist)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "branch does not exist",
-                            ErrorNumber = ErrorNumber.BranchDoesNotExist
-                        }
-                    };
+
+                HandleErrorCode((ErrorNumber)response.Data);
 
                 if (!request.Data.IsPickUp)
                 {
@@ -112,24 +96,7 @@ namespace Restaurant.Services
                             orderMeal.Id = GetValue<int>(reader["Result"]);
                         }
                     });
-                    if (orderMeal.Id == (int)ErrorNumber.OrderDoesNotExist)
-                        throw new RestaurantException
-                        {
-                            ErrorCode = new ErrorCode
-                            {
-                                ErrorMessage = "Order does not exist",
-                                ErrorNumber = ErrorNumber.OrderDoesNotExist
-                            }
-                        };
-                    if (orderMeal.Id == (int)ErrorNumber.MealDoesNotExist)
-                        throw new RestaurantException
-                        {
-                            ErrorCode = new ErrorCode
-                            {
-                                ErrorMessage = "Meal does not exist",
-                                ErrorNumber = ErrorNumber.MealDoesNotExist
-                            }
-                        };
+                    HandleErrorCode((ErrorNumber)orderMeal.Id);
                 }
 
                 foreach (var orderMeal in request.Data.OrderMeals)
@@ -148,26 +115,7 @@ namespace Restaurant.Services
                                 orderMeal.Id = GetValue<int>(reader["Result"]);
                             }
                         });
-
-                        if (orderMeal.Id == (int)ErrorNumber.OrderMealDoesNotExist)
-                            throw new RestaurantException
-                            {
-                                ErrorCode = new ErrorCode
-                                {
-                                    ErrorMessage = "order meal does not exist",
-                                    ErrorNumber = ErrorNumber.OrderMealDoesNotExist
-                                }
-                            };
-
-                        if (orderMeal.Id == (int)ErrorNumber.AttributeDoesNotExist)
-                            throw new RestaurantException
-                            {
-                                ErrorCode = new ErrorCode
-                                {
-                                    ErrorMessage = "attribute does not exist",
-                                    ErrorNumber = ErrorNumber.AttributeDoesNotExist
-                                }
-                            };
+                        HandleErrorCode((ErrorNumber)orderMeal.Id);
                     }
                 }
 
@@ -207,27 +155,10 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        result = GetValue<ErrorNumber>(reader["Result"], ErrorNumber.Success);
+                        result = GetValue(reader["Result"], ErrorNumber.Success);
                     }
                 });
-                if (result == ErrorNumber.NotFound)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "There isn't a branch with the id: {0} in the db",
-                            ErrorNumber = ErrorNumber.NotFound
-                        }
-                    };
-                if (result == ErrorNumber.AccessDenied)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "Access Denied",
-                            ErrorNumber = ErrorNumber.AccessDenied
-                        }
-                    };
+                HandleErrorCode(result);
                 return response;
             }
             catch (RestaurantException ex)

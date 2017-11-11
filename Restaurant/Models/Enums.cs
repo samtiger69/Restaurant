@@ -42,7 +42,11 @@
             UpdateBranch = 12,
 
             OrderDeliveryCreate = 13,
-            OrderDeliveryUpdate = 14
+            OrderDeliveryUpdate = 14,
+
+            ImageCreate = 15,
+            ImageUpdate = 16,
+            ImageDelete = 17
         }
 
         public enum SourceType
@@ -53,7 +57,8 @@
             AttributeGroup = 4,
             Attribute = 5,
             Order = 6,
-            OrderDelivery = 7
+            OrderDelivery = 7,
+            Image = 8
         }
 
     }

@@ -40,11 +40,13 @@
 
         UserNotBranchAdmin = -10,
 
+        AttributeGroupDoesNotExist = -11,
+
         AccessDenied = -100,
 
-        GeneralError = 100,
+        GeneralError = -200,
 
-        EmptyRequiredField = 1,
+        EmptyRequiredField = -300,
 
     }
 }

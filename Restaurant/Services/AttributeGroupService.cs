@@ -96,15 +96,7 @@ namespace Restaurant.Services
                         response.Data.Id = GetValue<int>(reader["Result"]);
                     }
                 });
-                if (response.Data.Id == (int)ErrorNumber.Exists)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "An attribute group with the same name/nameAr already exists in the db",
-                            ErrorNumber = ErrorNumber.Exists
-                        }
-                    };
+                HandleErrorCode((ErrorNumber)response.Data.Id);
                 Cache.ResetAttributeGroups();
                 return response;
             }
@@ -159,15 +151,7 @@ namespace Restaurant.Services
                         result = GetValue<ErrorNumber>(reader["Result"]);
                     }
                 });
-                if (result == ErrorNumber.NotFound)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = string.Format("No such attribute group with id: {0} exists in the db", request.Data.Id),
-                            ErrorNumber = ErrorNumber.NotFound
-                        }
-                    };
+                HandleErrorCode(result);
                 Cache.ResetAttributeGroups();
                 return response;
             }

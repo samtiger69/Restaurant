@@ -87,7 +87,7 @@ namespace Restaurant.Controllers
 
         [Authorize(Roles = "admin, branch_admin")]
         [HttpPost]
-        public Response<Meal> Create(Request<Meal> request)
+        public Response<int> Create(Request<MealCreate> request)
         {
             try
             {
@@ -99,17 +99,15 @@ namespace Restaurant.Controllers
             }
             catch (RestaurantException ex)
             {
-                return new Response<Meal>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = ex.ErrorCode
                 };
             }
             catch (Exception e)
             {
-                return new Response<Meal>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = e.Message,

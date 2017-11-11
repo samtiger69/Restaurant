@@ -28,91 +28,6 @@ namespace Restaurant.Services
         {
         }
 
-        //public Response<MealInfo> Info(Request<int> request)
-        //{
-        //    try
-        //    {
-        //        var response = new Response<MealInfo>
-        //        {
-        //            ErrorCode = new ErrorCode
-        //            {
-        //                ErrorMessage = "",
-        //                ErrorNumber = ErrorNumber.Success
-        //            }
-        //        };
-
-        //        ExecuteReader(StoredProcedure.MEAL_INFO, delegate (SqlCommand cmd)
-        //        {
-        //        }, delegate (SqlDataReader reader)
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                response.Data = new MealInfo
-        //                {
-        //                    Id = GetValue(reader["Id"], 0),
-        //                    NameAr = GetValue(reader["NameAr"], ""),
-        //                    Name = GetValue(reader["Name"], ""),
-        //                    IsActive = GetValue(reader["IsActive"], false),
-        //                    MealTypeId = GetValue(reader["MealTypeId"], 0),
-        //                    Price = GetValue<decimal>(reader["Price"], 0)
-        //                };
-        //            }
-
-        //            if (response.Data == null)
-        //            {
-        //                throw new RestaurantException
-        //                {
-        //                    ErrorCode = new ErrorCode
-        //                    {
-        //                        ErrorMessage = "Meal not found",
-        //                        ErrorNumber = ErrorNumber.NotFound
-        //                    }
-        //                };
-        //            }
-
-        //            reader.NextResult();
-        //            var attributes = new List<Entities.Attribute>();
-        //            while (reader.Read())
-        //            {
-        //                attributes.Add(new Entities.Attribute
-        //                {
-        //                    Id = GetValue<int>(reader["Id"], 0),
-        //                    Name = GetValue<string>(reader["Name"], ""),
-        //                    NameAr = GetValue<string>(reader["NameAr"], ""),
-        //                    Price = GetValue<decimal>(reader["Price"], 0),
-        //                    GroupId = GetValue<int?>(reader["GroupId"], null),
-        //                    IsActive = GetValue<bool>(reader["IsActive"], true)
-        //                });
-        //            }
-
-        //            reader.NextResult();
-        //            response.Data.AttributeGroups = new List<AttributeGroup>();
-        //            while (reader.Read())
-        //            {
-        //                var groupId = GetValue<int>(reader["Id"]);
-        //                response.Data.AttributeGroups.Add(new AttributeGroup
-        //                {
-        //                    Id = groupId,
-        //                    Name = GetValue<string>(reader["Name"], ""),
-        //                    NameAr = GetValue<string>(reader["NameAr"], ""),
-        //                    IsActive = GetValue<bool>(reader["IsActive"], true),
-        //                    Attributes = attributes.Where(m => m.GroupId == groupId).ToList()
-        //                });
-        //            }
-        //            response.Data.Attributes = attributes.Where(m => m.GroupId == null).ToList();
-        //        });
-        //        return response;
-        //    }
-        //    catch (RestaurantException ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
-
         public Response<List<Meal>> List(Request request)
         {
             try
@@ -140,7 +55,8 @@ namespace Restaurant.Services
                             Name = GetValue(reader["Name"], ""),
                             IsActive = GetValue(reader["IsActive"], false),
                             MealTypeId = GetValue(reader["MealTypeId"], 0),
-                            Price = GetValue<decimal>(reader["Price"], 0)
+                            Price = GetValue<decimal>(reader["Price"], 0),
+                            DefaultImageId = GetValue(reader["DefaultImageId"], 0)
                         });
                     }
                 });
@@ -156,13 +72,12 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<Meal> Create(Request<Meal> request)
+        public Response<int> Create(Request<MealCreate> request)
         {
             try
             {
-                var response = new Response<Meal>
+                var response = new Response<int>
                 {
-                    Data = request.Data,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -182,18 +97,13 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        response.Data.Id = GetValue<int>(reader["Result"]);
+                        response.Data = GetValue<int>(reader["Result"]);
                     }
                 });
-                if (response.Data.Id == (int)ErrorNumber.Exists)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "A meal with the same name/nameAr already exists in the db",
-                            ErrorNumber = ErrorNumber.Exists
-                        }
-                    };
+                HandleErrorCode((ErrorNumber)response.Data);
+
+                AddMealRelatedInfo(request, response.Data);
+
                 Cache.ResetMeals();
                 return response;
             }
@@ -256,17 +166,51 @@ namespace Restaurant.Services
                         result = GetValue(reader["Result"], ErrorNumber.Success);
                     }
                 });
-                if (result == ErrorNumber.NotFound)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = string.Format("No such meal with id: {0} exists in the db", request.Data.Id),
-                            ErrorNumber = ErrorNumber.NotFound
-                        }
-                    };
+                HandleErrorCode(result);
                 Cache.ResetMeals();
                 return response;
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private void AddMealRelatedInfo(Request<MealCreate> request, int mealId)
+        {
+            try
+            {
+                if (request.Data.AttributeGroups != null && request.Data.AttributeGroups.Count > 0)
+                {
+                    var mealAttributeGroupService = MealAttributeGroupService.GetInstance();
+                    foreach (var id in request.Data.AttributeGroups)
+                    {
+                        mealAttributeGroupService.Create(new Request<MealAttributeGroupCreate> { UserId = request.UserId, Data = new MealAttributeGroupCreate { MealId = mealId, AttributeGroupId = id } });
+                    }
+                }
+
+                if (request.Data.Attributes != null && request.Data.Attributes.Count > 0)
+                {
+                    var mealAttributeService = MealAttributeService.GetInstance();
+                    foreach (var id in request.Data.Attributes)
+                    {
+                        mealAttributeService.Create(new Request<MealAttributeCreate> { UserId = request.UserId, Data = new MealAttributeCreate { AttributeId = id, MealId = mealId } });
+                    }
+                }
+
+
+                if(request.Data.MealImages != null && request.Data.MealImages.Count > 0)
+                {
+                    var imageService = ImageService.GetInstance();
+                    foreach (var image in request.Data.MealImages)
+                    {
+                        imageService.Create(new Request<ImageCreate> { UserId = request.UserId, Data = new ImageCreate { Content = image.Content, IsDefault = image.IsDefualt, SourceId = mealId, SourceType = Enums.SourceType.Meal } });
+                    }
+                }
             }
             catch (RestaurantException ex)
             {

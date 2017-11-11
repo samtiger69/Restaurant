@@ -27,6 +27,7 @@ namespace Restaurant.Services
         private MealAttributeService()
         {
         }
+
         public Response<List<MealAttribute>> List(Request request)
         {
             try
@@ -55,6 +56,87 @@ namespace Restaurant.Services
                         });
                     }
                 });
+                return response;
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Response<int> Create(Request<MealAttributeCreate> request)
+        {
+            try
+            {
+                var response = new Response<int>
+                {
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "",
+                        ErrorNumber = ErrorNumber.Success
+                    }
+                };
+
+                ExecuteReader(StoredProcedure.MEAL_ATTRIBUTE_CREATE, delegate (SqlCommand cmd)
+                {
+                    cmd.Parameters.AddWithValue("@MealId", request.Data.MealId);
+                    cmd.Parameters.AddWithValue("@AttributeId", request.Data.AttributeId);
+                }, delegate (SqlDataReader reader)
+                {
+                    if (reader.Read())
+                    {
+                        response.Data = GetValue(reader["Result"], 0);
+                    }
+                });
+
+                HandleErrorCode((ErrorNumber)response.Data);
+                Cache.ResetMealAttributes();
+                return response;
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Response Delete(Request<MealAttributeCreate> request)
+        {
+            try
+            {
+                var response = new Response
+                {
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = "",
+                        ErrorNumber = ErrorNumber.Success
+                    }
+                };
+
+                var result = ErrorNumber.Success;
+
+                ExecuteReader(StoredProcedure.MEAL_ATTRIBUTE_DELETE, delegate (SqlCommand cmd)
+                {
+                    cmd.Parameters.AddWithValue("@AttributeId", request.Data.AttributeId);
+                    cmd.Parameters.AddWithValue("@MealId", request.Data.MealId);
+                }, delegate (SqlDataReader reader)
+                {
+                    if (reader.Read())
+                    {
+                        result = GetValue(reader["Result"], ErrorNumber.Success);
+                    }
+                });
+
+                HandleErrorCode(result);
+
+                Cache.ResetMealAttributes();
                 return response;
             }
             catch (RestaurantException ex)

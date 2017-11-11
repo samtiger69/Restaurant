@@ -3,12 +3,12 @@ using Restaurant.Models;
 using System;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
+using static Restaurant.Models.Enums;
 
 namespace Restaurant.Controllers
 {
     public class BaseController : ApiController
     {
-        #region Shared
         protected void ValidateNames(BasicEntity entity)
         {
             try
@@ -44,9 +44,7 @@ namespace Restaurant.Controllers
             entity.Name = entity.Name.Trim();
             entity.NameAr = entity.NameAr.Trim();
         }
-        #endregion
 
-        #region Order_Helpers
         protected void ValidateCreateOrder(OrderCreate orderCreate)
         {
             try
@@ -164,6 +162,66 @@ namespace Restaurant.Controllers
                     }
                 };
         }
-        #endregion
+
+        protected void ValidateImageCreate(ImageCreate request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.Content))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "empty image content",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if(request.SourceId < 1)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "wrong source id",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if (Enum.IsDefined(typeof(SourceType), request.SourceType))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "wrong source type",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateImageUpdate(ImageUpdate request)
+        {
+            try
+            {
+                if (request.Id < 1)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "wrong source id",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using Restaurant.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Restaurant.Models.Enums;
 
 namespace Restaurant.Models
 {
@@ -12,6 +13,7 @@ namespace Restaurant.Models
         private static List<Branch> Branches;
         private static List<MealType> MealTypes;
         private static List<Meal> Meals;
+        private static List<Image> Images;
         private static List<AttributeGroup> AttributeGroups;
         private static List<Entities.Attribute> Attributes;
         private static List<MealAttributeGroup> MealAttributeGroups;
@@ -33,6 +35,32 @@ namespace Restaurant.Models
                     Branches = response.Data;
                 }
                 return Branches.Where(m => CheckBasicFilter(m, request)).ToList();
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static void ResetImages()
+        {
+            Images = null;
+        }
+        public static List<Image> GetImagess(int sourceId, SourceType sourceType)
+        {
+            try
+            {
+                if (Images == null)
+                {
+                    var imageService = ImageService.GetInstance();
+                    var response = imageService.List(new Request());
+                    Images = response.Data;
+                }
+                return Images.Where(m => m.SourceId == sourceId && m.SourceType == sourceType).ToList();
             }
             catch (RestaurantException ex)
             {
@@ -124,6 +152,10 @@ namespace Restaurant.Models
             }
         }
 
+        public static void ResetMealAttributes()
+        {
+            MealAttributes = null;
+        }
         public static List<MealAttribute> GetMealAttributes(int mealId)
         {
             try
@@ -146,6 +178,10 @@ namespace Restaurant.Models
             }
         }
 
+        public static void ResetMealAttributeGroups()
+        {
+            MealAttributeGroups = null;
+        }
         public static List<MealAttributeGroup> GetMealAttributeGroups(int mealId)
         {
             try
@@ -244,6 +280,9 @@ namespace Restaurant.Models
                 {
                     mealInfo.Attributes.Add(GetAttributes(new Request<BaseList>() { UserId = request.UserId, Data = new BaseList { Id = attribute.AttributeId } }).First());
                 }
+
+                mealInfo.Images = GetImagess(request.Data, SourceType.Meal);
+
                 return mealInfo;
             }
             catch (RestaurantException ex)

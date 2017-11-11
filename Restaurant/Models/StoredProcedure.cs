@@ -9,6 +9,18 @@
         public const string BRANCH_UPDATE = "Branch_Update";
         #endregion
 
+        #region OrderDelivery
+        public const string ORDER_DELIVERY_SELECT = "OrderDelivery_Select";
+        public const string ORDER_DELIVERY_SAVE = "OrderDelivery_Save";
+        #endregion
+
+        #region Image
+        public const string IMAGE_SELECT = "Image_Select";
+        public const string IMAGE_CREATE = "Image_Create";
+        public const string IMAGE_UPDATE = "Image_Update";
+        public const string IMAGE_DELETE = "Image_Delete";
+        #endregion
+
         #region MealType
         public const string MEAL_TYPE_SELECT = "MealType_Select";
         public const string MEAL_TYPE_CREATE = "MealType_Create";
@@ -23,10 +35,16 @@
 
         #region MealAttribute
         public const string MEAL_ATTRIBUTE_SELECT = "MealAttribute_Select";
+        public const string MEAL_ATTRIBUTE_CREATE = "MealAttribute_Create   ";
+        public const string MEAL_ATTRIBUTE_UPDATE= "MealAttribute_Update";
+        public const string MEAL_ATTRIBUTE_DELETE = "MealAttribute_Delete";
         #endregion
 
         #region MealAttributeGroup
-        public const string MEAL_ATTRIBUTE_GROUP_SELECT = "MealGroupAttribute_Select";
+        public const string MEAL_ATTRIBUTE_GROUP_SELECT = "MealAttributeGroup_Select";
+        public const string MEAL_ATTRIBUTE_GROUP_CREATE = "MealAttributeGroup_Create";
+        public const string MEAL_ATTRIBUTE_GROUP_UPDATE = "MealAttributeGroup_Update";
+        public const string MEAL_ATTRIBUTE_GROUP_DELETE = "MealAttributeGroup_Delete";
         #endregion
 
         #region Attribute

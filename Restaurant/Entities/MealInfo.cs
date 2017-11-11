@@ -11,5 +11,6 @@ namespace Restaurant.Entities
         }
         public virtual List<AttributeGroup> AttributeGroups { get; set; }
         public virtual List<Attribute> Attributes { get; set; }
+        public virtual List<Entities.Image> Images { get; set; }
     }
 }
