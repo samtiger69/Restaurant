@@ -72,13 +72,12 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<Branch> Create(Request<Branch> request)
+        public Response<int> Create(Request<BranchCreate> request)
         {
             try
             {
-                var response = new Response<Branch>
+                var response = new Response<int>
                 {
-                    Data = request.Data,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -92,20 +91,20 @@ namespace Restaurant.Services
                     cmd.Parameters.AddWithValue("@Name", request.Data.Name);
                     cmd.Parameters.AddWithValue("@NameAr", request.Data.NameAr);
                     if (!string.IsNullOrEmpty(request.Data.LocationDescription))
-                        cmd.Parameters.AddWithValue("@LocationDescription", request.Data.LocationDescription);
+                        cmd.Parameters.AddWithValue("@LocationDescription", request.Data.LocationDescription.Trim());
                     if (!string.IsNullOrEmpty(request.Data.Latitude))
-                        cmd.Parameters.AddWithValue("@Latitude", request.Data.Latitude);
+                        cmd.Parameters.AddWithValue("@Latitude", request.Data.Latitude.Trim());
                     if (!string.IsNullOrEmpty(request.Data.Longitude))
-                        cmd.Parameters.AddWithValue("@Longitude", request.Data.Longitude);
+                        cmd.Parameters.AddWithValue("@Longitude", request.Data.Longitude.Trim());
                 },
                 delegate (SqlDataReader reader)
                 {
                     if (reader.Read())
                     {
-                        response.Data.Id = GetValue<int>(reader["Result"]);
+                        response.Data = GetValue<int>(reader["Result"]);
                     }
                 });
-                HandleErrorCode((ErrorNumber)response.Data.Id);
+                HandleErrorCode((ErrorNumber)response.Data);
                 Cache.ResetBranches();
                 return response;
             }
@@ -119,7 +118,7 @@ namespace Restaurant.Services
             }
         }
 
-        public Response Update(Request<Branch> request)
+        public Response Update(Request<BranchUpdate> request)
         {
             try
             {

@@ -7,8 +7,14 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>  
+    /// Branch CRUD operations controller
+    /// </summary>
     public class BranchController : BaseController
     {
+        /// <summary>  
+        /// Returns list of branches
+        /// </summary>
         [Authorize]
         [HttpPost]
         public Response<List<Branch>> List(Request<BaseList> request)
@@ -47,31 +53,31 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>  
+        /// Create a branch
+        /// </summary>
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public Response<Branch> Create(Request<Branch> request)
+        public Response<int> Create(Request<BranchCreate> request)
         {
             try
             {
                 ValidateBaseRequest(request);
                 var branchService = BranchService.GetInstance();
-                TrimNames(request.Data);
-                ValidateNames(request.Data);
+                ValidateBranchCreate(request.Data);
                 return branchService.Create(request);
             }
             catch (RestaurantException ex)
             {
-                return new Response<Branch>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = ex.ErrorCode
                 };
             }
             catch (Exception e)
             {
-                return new Response<Branch>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = e.Message,
@@ -81,9 +87,12 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>  
+        /// Update a branch
+        /// </summary>
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public Response Update(Request<Branch> request)
+        public Response Update(Request<BranchUpdate> request)
         {
             try
             {

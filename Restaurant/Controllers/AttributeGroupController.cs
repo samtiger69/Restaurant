@@ -7,9 +7,16 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>
+    /// attribute group list/create/update
+    /// </summary>
     [Authorize(Roles = "admin, branch_admin")]
     public class AttributeGroupController : BaseController
     {
+        /// <summary>
+        /// get attribute groups
+        /// </summary>
+        /// <returns>List of attribute groups</returns>
         [HttpPost]
         public Response<List<AttributeGroup>> List(Request<BaseList> request)
         {
@@ -47,30 +54,31 @@ namespace Restaurant.Controllers
             }
         }
         
+        /// <summary>
+        /// create an AttributeGroup and assign it to attributes
+        /// </summary>
+        /// <returns>created attribute group id</returns>
         [HttpPost]
-        public Response<AttributeGroup> Create(Request<AttributeGroup> request)
+        public Response<int> Create(Request<AttributeGroupCreate> request)
         {
             try
             {
                 ValidateBaseRequest(request);
+                ValidateAttributeGroupCreate(request);
                 var attributeGroupService = AttributeGroupService.GetInstance();
-                TrimNames(request.Data);
-                ValidateNames(request.Data);
                 return attributeGroupService.Create(request);
             }
             catch (RestaurantException ex)
             {
-                return new Response<AttributeGroup>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = ex.ErrorCode
                 };
             }
             catch (Exception e)
             {
-                return new Response<AttributeGroup>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = e.Message,
@@ -79,9 +87,12 @@ namespace Restaurant.Controllers
                 };
             }
         }
-        
+
+        /// <summary>
+        /// update attribute group
+        /// </summary>
         [HttpPost]
-        public Response Update(Request<AttributeGroup> request)
+        public Response Update(Request<AttributeGroupUpdate> request)
         {
             try
             {

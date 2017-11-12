@@ -7,8 +7,15 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>
+    /// orders list/create/update
+    /// </summary>
     public class OrderController : BaseController
     {
+        /// <summary>
+        /// list orders
+        /// </summary>
+        /// <returns>list of orders</returns>
         [Authorize]
         [HttpPost]
         public Response<List<Branch>> List(Request<BaseList> request)
@@ -48,6 +55,10 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// create an order
+        /// </summary>
+        /// <returns>created order id</returns>
         [Authorize]
         [HttpPost]
         public Response<int> Create(Request<OrderCreate> request)
@@ -81,6 +92,9 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// change order status
+        /// </summary>
         [Authorize(Roles = "branch_admin, delivery_man")]
         [HttpPost]
         public Response Update(Request<OrderUpdate> request)

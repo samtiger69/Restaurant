@@ -1,11 +1,18 @@
-﻿using Restaurant.Entities;
-
-namespace Restaurant.Models
+﻿namespace Restaurant.Models
 {
-    public class MealUpdate : BasicEntity
+    /// <summary>
+    /// meal update model
+    /// </summary>
+    public class MealUpdate : BaseUpdate
     {
+        /// <summary>
+        /// meal type id
+        /// </summary>
         public int? MealTypeId { get; set; }
+
+        /// <summary>
+        /// meal price
+        /// </summary>
         public decimal? Price { get; set; }
-        public int? DefaultImageId { get; set; }
     }
 }

@@ -1,5 +1,8 @@
 ﻿namespace Restaurant.Models
 {
+    /// <summary>
+    /// error code class
+    /// </summary>
     public class ErrorCode
     {
         public ErrorCode()
@@ -11,11 +14,21 @@
             ErrorNumber = errorNumber;
             ErrorMessage = errorMessage;
         }
-
+        
+        /// <summary>
+        /// int represting error code
+        /// </summary>
         public ErrorNumber ErrorNumber { get; set; }
+
+        /// <summary>
+        /// error description
+        /// </summary>
         public string ErrorMessage { get; set; }
     }
 
+    /// <summary>
+    /// error codes
+    /// </summary>
     public enum ErrorNumber
     {
         Success = 0,

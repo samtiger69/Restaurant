@@ -33,7 +33,6 @@ namespace Restaurant.Services
             {
                 var response = new Response<int>
                 {
-                    Data = 0,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -67,19 +66,6 @@ namespace Restaurant.Services
                 });
 
                 HandleErrorCode((ErrorNumber)response.Data);
-
-                if (!request.Data.IsPickUp)
-                {
-                    ExecuteNonQuery(StoredProcedure.ORDER_ADDRESS_CREATE, delegate (SqlCommand cmd)
-                    {
-                        cmd.Parameters.AddWithValue("@OrderId", request.Data);
-                        cmd.Parameters.AddWithValue("@Area", request.Data.Address.Area);
-                        cmd.Parameters.AddWithValue("@Street", request.Data.Address.Street);
-                        cmd.Parameters.AddWithValue("@Building", request.Data.Address.Building);
-                        cmd.Parameters.AddWithValue("@Floor", request.Data.Address.Floor);
-                        cmd.Parameters.AddWithValue("@OfficeNumber", request.Data.Address.OfficeNumber);
-                    });
-                }
 
                 foreach (var orderMeal in request.Data.OrderMeals)
                 {

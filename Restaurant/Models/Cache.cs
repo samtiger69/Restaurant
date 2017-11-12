@@ -7,6 +7,9 @@ using static Restaurant.Models.Enums;
 
 namespace Restaurant.Models
 {
+    /// <summary>
+    /// caching object
+    /// </summary>
     public class Cache
     {
         #region Attributes

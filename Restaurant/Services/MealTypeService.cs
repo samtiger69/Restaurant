@@ -55,7 +55,8 @@ namespace Restaurant.Services
                             Name = GetValue<string>(reader["Name"], ""),
                             IsActive = GetValue<bool>(reader["IsActive"], false),
                             BranchId = GetValue<int>(reader["BranchId"], 0),
-                            Description = GetValue<string>(reader["Description"], "")
+                            Description = GetValue<string>(reader["Description"], ""),
+                            ImageId = GetValue<int>(reader["ImageId"],0)
                         });
                     }
                 });
@@ -71,13 +72,12 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<MealType> Create(Request<MealType> request)
+        public Response<int> Create(Request<MealTypeCreate> request)
         {
             try
             {
-                var response = new Response<MealType>
+                var response = new Response<int>
                 {
-                    Data = request.Data,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -98,10 +98,14 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        response.Data.Id = GetValue<int>(reader["Result"]);
+                        response.Data = GetValue<int>(reader["Result"]);
                     }
                 });
-                HandleErrorCode((ErrorNumber)response.Data.Id);
+                HandleErrorCode((ErrorNumber)response.Data);
+
+                var imageService = ImageService.GetInstance();
+                imageService.Create(new Request<ImageCreate> { UserId = request.UserId, Data = new ImageCreate { Content = request.Data.ImageContent, IsDefault = true, SourceId = response.Data, SourceType = Enums.SourceType.MealType } });
+
                 Cache.ResetMealTypes();
                 return response;
             }

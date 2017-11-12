@@ -3,20 +3,19 @@
 namespace Restaurant.Models
 {
     /// <summary>
-    /// image update model
+    /// attribute create model
     /// </summary>
-    public class ImageUpdate
+    public class AttributeCreate : BaseCreate
     {
         /// <summary>
-        /// image id
+        /// attribute group id
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public int? GroupId { get; set; }
 
         /// <summary>
-        /// is defualt image
+        /// attribute price
         /// </summary>
         [Required]
-        public bool IsDefault { get; set; }
+        public decimal Price { get; set; }
     }
 }

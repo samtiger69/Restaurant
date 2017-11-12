@@ -4,5 +4,6 @@
     {
         public string Description { get; set; }
         public int BranchId { get; set; }
+        public int ImageId { get; set; }
     }
 }

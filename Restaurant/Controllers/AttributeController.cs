@@ -6,9 +6,16 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>
+    /// attribute list/create/update
+    /// </summary>
     [Authorize(Roles = "admin, branch_admin")]
     public class AttributeController : BaseController
     {
+        /// <summary>
+        /// get attribute list
+        /// </summary>
+        /// <returns>list of attributes</returns>
         [HttpPost]
         public Response<List<Entities.Attribute>> List(Request<BaseList> request)
         {
@@ -46,30 +53,31 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// create attribute
+        /// </summary>
+        /// <returns>created attribute id</returns>
         [HttpPost]
-        public Response<Entities.Attribute> Create(Request<Entities.Attribute> request)
+        public Response<int> Create(Request<AttributeCreate> request)
         {
             try
             {
                 ValidateBaseRequest(request);
+                ValidateAttributeCreate(request);
                 var attributeService = AttributeService.GetInstance();
-                TrimNames(request.Data);
-                ValidateNames(request.Data);
                 return attributeService.Create(request);
             }
             catch (RestaurantException ex)
             {
-                return new Response<Entities.Attribute>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = ex.ErrorCode
                 };
             }
             catch (Exception e)
             {
-                return new Response<Entities.Attribute>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = e.Message,
@@ -79,6 +87,9 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// update attribute
+        /// </summary>
         [HttpPost]
         public Response Update(Request<AttributeUpdate> request)
         {

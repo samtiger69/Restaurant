@@ -5,8 +5,15 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>
+    /// order deliver create/update
+    /// </summary>
     public class OrderDeliveryController : BaseController
     {
+        /// <summary>
+        /// create or update a deliver
+        /// </summary>
+        /// <returns>order delivery id</returns>
         [Authorize(Roles = "branch_admin")]
         [HttpPost]
         public Response<int> Save(Request<OrderDeliverySave> request)

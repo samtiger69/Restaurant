@@ -7,8 +7,15 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>
+    /// meal list/get/create/update
+    /// </summary>
     public class MealController : BaseController
     {
+        /// <summary>
+        /// get meal list
+        /// </summary>
+        /// <returns>basic meal info list</returns>
         [Authorize]
         [HttpPost]
         public Response<List<Meal>> List(Request<MealList> request)
@@ -47,6 +54,10 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// get meal details
+        /// </summary>
+        /// <returns>MealAttributes/mealAttributeGroups/MealImages</returns>
         [Authorize]
         [HttpPost]
         public Response<MealInfo> Get(Request<int> request)
@@ -85,6 +96,10 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// create a meal
+        /// </summary>
+        /// <returns>created meal id</returns>
         [Authorize(Roles = "admin, branch_admin")]
         [HttpPost]
         public Response<int> Create(Request<MealCreate> request)
@@ -92,9 +107,8 @@ namespace Restaurant.Controllers
             try
             {
                 ValidateBaseRequest(request);
+                ValidateMealCreate(request.Data);
                 var mealService = MealService.GetInstance();
-                TrimNames(request.Data);
-                ValidateNames(request.Data);
                 return mealService.Create(request);
             }
             catch (RestaurantException ex)
@@ -117,6 +131,9 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// update a meal
+        /// </summary>
         [Authorize(Roles = "admin, branch_admin")]
         [HttpPost]
         public Response Update(Request<MealUpdate> request)

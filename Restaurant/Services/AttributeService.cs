@@ -68,13 +68,12 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<Entities.Attribute> Create(Request<Entities.Attribute> request)
+        public Response<int> Create(Request<AttributeCreate> request)
         {
             try
             {
-                var response = new Response<Entities.Attribute>
+                var response = new Response<int>
                 {
-                    Data = request.Data,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -97,10 +96,10 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        response.Data.Id = GetValue<int>(reader["Result"]);
+                        response.Data = GetValue<int>(reader["Result"]);
                     }
                 });
-                HandleErrorCode((ErrorNumber)response.Data.Id);
+                HandleErrorCode((ErrorNumber)response.Data);
                 Cache.ResetAttributes();
                 return response;
             }

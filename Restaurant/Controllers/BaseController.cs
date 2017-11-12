@@ -1,5 +1,4 @@
-﻿using Restaurant.Entities;
-using Restaurant.Models;
+﻿using Restaurant.Models;
 using System;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
@@ -9,11 +8,11 @@ namespace Restaurant.Controllers
 {
     public class BaseController : ApiController
     {
-        protected void ValidateNames(BasicEntity entity)
+        protected void ValidateNames(string name, string nameAr)
         {
             try
             {
-                if (string.IsNullOrEmpty(entity.Name))
+                if (string.IsNullOrEmpty(name))
                     throw new RestaurantException
                     {
                         ErrorCode = new ErrorCode
@@ -23,7 +22,7 @@ namespace Restaurant.Controllers
                         }
                     };
 
-                if (string.IsNullOrEmpty(entity.NameAr))
+                if (string.IsNullOrEmpty(nameAr))
                     throw new RestaurantException
                     {
                         ErrorCode = new ErrorCode
@@ -39,10 +38,121 @@ namespace Restaurant.Controllers
             }
         }
 
-        protected void TrimNames(BasicEntity entity)
+        protected void ValidateBranchCreate(BranchCreate branchCreate)
         {
-            entity.Name = entity.Name.Trim();
-            entity.NameAr = entity.NameAr.Trim();
+            try
+            {
+                branchCreate.Name = branchCreate.Name.Trim();
+                branchCreate.NameAr = branchCreate.NameAr.Trim();
+                ValidateNames(branchCreate.Name, branchCreate.NameAr);
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateMealTypeCreate(MealTypeCreate mealTypeCreate)
+        {
+            try
+            {
+                mealTypeCreate.Name = mealTypeCreate.Name.Trim();
+                mealTypeCreate.NameAr = mealTypeCreate.NameAr.Trim();
+                ValidateNames(mealTypeCreate.Name, mealTypeCreate.NameAr);
+                if (string.IsNullOrEmpty(mealTypeCreate.ImageContent))
+                    ThrowError("Image is required", ErrorNumber.EmptyRequiredField);
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateMealCreate(MealCreate mealCreate)
+        {
+            try
+            {
+                mealCreate.Name = mealCreate.Name.Trim();
+                mealCreate.NameAr = mealCreate.NameAr.Trim();
+                ValidateNames(mealCreate.Name, mealCreate.NameAr);
+                if (mealCreate.MealTypeId < 1)
+                    ThrowError("wrong meal type id", ErrorNumber.EmptyRequiredField);
+
+                if (mealCreate.MealImages == null || mealCreate.MealImages.Count < 1)
+                    ThrowError("empty images", ErrorNumber.EmptyRequiredField);
+
+                var hasDefault = false;
+                foreach (var image in mealCreate.MealImages)
+                {
+                    if (image.IsDefualt)
+                    {
+                        hasDefault = true;
+                        break;
+                    }
+                }
+                if (!hasDefault)
+                    ThrowError("no default image is specified", ErrorNumber.EmptyRequiredField);
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void ThrowError(string message, ErrorNumber errorNumber)
+        {
+            try
+            {
+                throw new RestaurantException
+                {
+                    ErrorCode = new ErrorCode
+                    {
+                        ErrorMessage = message,
+                        ErrorNumber = errorNumber
+                    }
+                };
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateAttributeCreate(Request<AttributeCreate> request)
+        {
+            try
+            {
+                request.Data.Name = request.Data.Name.Trim();
+                request.Data.NameAr = request.Data.NameAr.Trim();
+                ValidateNames(request.Data.Name, request.Data.NameAr);
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateAttributeGroupCreate(Request<AttributeGroupCreate> request)
+        {
+            try
+            {
+                request.Data.Name = request.Data.Name.Trim();
+                request.Data.NameAr = request.Data.NameAr.Trim();
+                ValidateNames(request.Data.Name, request.Data.NameAr);
+                if (request.Data.Attributes == null || request.Data.Attributes.Count < 1)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "You must assign atributes to attributeGroup",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
         }
 
         protected void ValidateCreateOrder(OrderCreate orderCreate)
@@ -50,51 +160,25 @@ namespace Restaurant.Controllers
             try
             {
                 if (string.IsNullOrEmpty(orderCreate.UserId))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "UserId is required",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
+                    ThrowError("UserId is required", ErrorNumber.EmptyRequiredField);
 
                 if (orderCreate.BranchId < 0)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "Incorrect branchId",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
+                    ThrowError("Incorrect branchId", ErrorNumber.EmptyRequiredField);
 
                 if (orderCreate.OrderMeals == null || orderCreate.OrderMeals.Count < 1)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "OrderMeals cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-                if(!orderCreate.IsPickUp)
+                    ThrowError("OrderMeals cannot be empty", ErrorNumber.EmptyRequiredField);
+
+                if (!orderCreate.IsPickUp)
                 {
-                    if(orderCreate.Address == null)
-                        throw new RestaurantException
-                        {
-                            ErrorCode = new ErrorCode
-                            {
-                                ErrorMessage = "Address cannot be empty in case of delivery",
-                                ErrorNumber = ErrorNumber.EmptyRequiredField
-                            }
-                        };
+                    if (orderCreate.Address == null || string.IsNullOrEmpty(orderCreate.Address.Area) || string.IsNullOrEmpty(orderCreate.Address.Building) || string.IsNullOrEmpty(orderCreate.Address.Floor) || string.IsNullOrEmpty(orderCreate.Address.OfficeNumber))
+                        ThrowError("Address cannot be empty in case of delivery", ErrorNumber.EmptyRequiredField);
                     orderCreate.Address.Area = orderCreate.Address.Area.Trim();
                     orderCreate.Address.Street = orderCreate.Address.Street.Trim();
                     orderCreate.Address.Building = orderCreate.Address.Building.Trim();
                     orderCreate.Address.OfficeNumber = orderCreate.Address.OfficeNumber.Trim();
                 }
-                orderCreate.Notes = orderCreate.Notes.Trim();
+                if(!string.IsNullOrEmpty(orderCreate.Notes))
+                    orderCreate.Notes = orderCreate.Notes.Trim();
             }
             catch (RestaurantException ex)
             {
@@ -177,7 +261,7 @@ namespace Restaurant.Controllers
                         }
                     };
 
-                if(request.SourceId < 1)
+                if (request.SourceId < 1)
                     throw new RestaurantException
                     {
                         ErrorCode = new ErrorCode

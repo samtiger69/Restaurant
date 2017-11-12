@@ -1,23 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static Restaurant.Models.Enums;
 
 namespace Restaurant.Models
 {
     /// <summary>
-    /// order update model
+    /// base create model
     /// </summary>
-    public class OrderUpdate
+    public class BaseCreate
     {
         /// <summary>
-        /// order id
+        /// English name
         /// </summary>
         [Required]
-        public int OrderId { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// order status
+        /// Arabic Name
         /// </summary>
         [Required]
-        public OrderStatus Status { get; set; }
+        public string NameAr { get; set; }
     }
 }

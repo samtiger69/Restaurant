@@ -2,7 +2,6 @@
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace Restaurant.Services
 {
@@ -41,7 +40,7 @@ namespace Restaurant.Services
             }
         }
 
-        protected async Task<string> ExecuteScalar(string storedProcedure, Action<SqlCommand> fillCommand)
+        protected string ExecuteScalar(string storedProcedure, Action<SqlCommand> fillCommand)
         {
             try
             {
@@ -54,8 +53,8 @@ namespace Restaurant.Services
                         Connection = connection
                     };
                     fillCommand(command);
-                    await connection.OpenAsync();
-                    return (await command.ExecuteScalarAsync()).ToString();
+                    connection.Open();
+                    return (command.ExecuteScalar()).ToString();
                 }
             }
             catch (Exception e)

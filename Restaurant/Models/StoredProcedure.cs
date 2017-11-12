@@ -2,7 +2,6 @@
 {
     public static class StoredProcedure
     {
-
         #region Branch
         public const string BRANCH_SELECT = "Branch_Select";
         public const string BRANCH_CREATE = "Branch_Create";

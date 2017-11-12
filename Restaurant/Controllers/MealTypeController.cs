@@ -7,8 +7,15 @@ using System.Web.Http;
 
 namespace Restaurant.Controllers
 {
+    /// <summary>
+    /// mealtype list/create/update
+    /// </summary>
     public class MealTypeController : BaseController
     {
+        /// <summary>
+        /// list meal types
+        /// </summary>
+        /// <returns>list of meal types</returns>
         [Authorize]
         [HttpPost]
         public Response<List<MealType>> List(Request<MealTypeList> request)
@@ -47,31 +54,32 @@ namespace Restaurant.Controllers
             }
         }
 
-        [Authorize(Roles = "branch_admin")]
+        /// <summary>
+        /// create meal type
+        /// </summary>
+        /// <returns>created meal type id</returns>
+        [Authorize(Roles = "admin, branch_admin")]
         [HttpPost]
-        public Response<MealType> Create(Request<MealType> request)
+        public Response<int> Create(Request<MealTypeCreate> request)
         {
             try
             {
                 ValidateBaseRequest(request);
+                ValidateMealTypeCreate(request.Data);
                 var mealType = MealTypeService.GetInstance();
-                TrimNames(request.Data);
-                ValidateNames(request.Data);
                 return mealType.Create(request);
             }
             catch (RestaurantException ex)
             {
-                return new Response<MealType>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = ex.ErrorCode
                 };
             }
             catch (Exception e)
             {
-                return new Response<MealType>
+                return new Response<int>
                 {
-                    Data = null,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = e.Message,
@@ -81,6 +89,9 @@ namespace Restaurant.Controllers
             }
         }
 
+        /// <summary>
+        /// update meal type
+        /// </summary>
         [Authorize(Roles = "branch_admin")]
         [HttpPost]
         public Response Update(Request<MealTypeUpdate> request)

@@ -1,10 +1,18 @@
-﻿using Restaurant.Entities;
-
-namespace Restaurant.Models
+﻿namespace Restaurant.Models
 {
-    public class MealTypeUpdate : BasicEntity
+    /// <summary>
+    /// meal type update model
+    /// </summary>
+    public class MealTypeUpdate : BaseUpdate
     {
+        /// <summary>
+        /// optional description
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// meal type branch id
+        /// </summary>
         public int? BranchId { get; set; }
     }
 }

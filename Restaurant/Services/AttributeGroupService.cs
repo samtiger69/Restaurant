@@ -69,13 +69,12 @@ namespace Restaurant.Services
             }
         }
 
-        public Response<AttributeGroup> Create(Request<AttributeGroup> request)
+        public Response<int> Create(Request<AttributeGroupCreate> request)
         {
             try
             {
-                var response = new Response<AttributeGroup>
+                var response = new Response<int>
                 {
-                    Data = request.Data,
                     ErrorCode = new ErrorCode
                     {
                         ErrorMessage = "",
@@ -93,10 +92,22 @@ namespace Restaurant.Services
                 {
                     if (reader.Read())
                     {
-                        response.Data.Id = GetValue<int>(reader["Result"]);
+                        response.Data = GetValue<int>(reader["Result"]);
                     }
                 });
-                HandleErrorCode((ErrorNumber)response.Data.Id);
+
+                HandleErrorCode((ErrorNumber)response.Data);
+
+                if(request.Data.Attributes != null && request.Data.Attributes.Count > 0)
+                {
+                    var attributeService = AttributeService.GetInstance();
+                    foreach (var attributeId in request.Data.Attributes)
+                    {
+                        attributeService.Update(new Request<AttributeUpdate> { UserId = request.UserId, Data = new AttributeUpdate { GroupId = response.Data, Id = attributeId } });
+                    }
+                    Cache.ResetAttributes();
+                }
+
                 Cache.ResetAttributeGroups();
                 return response;
             }
@@ -110,7 +121,7 @@ namespace Restaurant.Services
             }
         }
 
-        public Response Update(Request<AttributeGroup> request)
+        public Response Update(Request<AttributeGroupUpdate> request)
         {
             try
             {
@@ -152,6 +163,27 @@ namespace Restaurant.Services
                     }
                 });
                 HandleErrorCode(result);
+
+                if(request.Data.AttributesToAdd != null && request.Data.AttributesToAdd.Count > 0)
+                {
+                    var attributeService = AttributeService.GetInstance();
+                    foreach (var attributeId in request.Data.AttributesToAdd)
+                    {
+                        attributeService.Update(new Request<AttributeUpdate> { UserId = request.UserId, Data = new AttributeUpdate { GroupId = request.Data.Id, Id = attributeId } });
+                    }
+                    Cache.ResetAttributes();
+                }
+
+                if (request.Data.AttributesToRemove != null && request.Data.AttributesToRemove.Count > 0)
+                {
+                    var attributeService = AttributeService.GetInstance();
+                    foreach (var attributeId in request.Data.AttributesToRemove)
+                    {
+                        attributeService.Update(new Request<AttributeUpdate> { UserId = request.UserId, Data = new AttributeUpdate { GroupId = -1, Id = attributeId } });
+                    }
+                    Cache.ResetAttributes();
+                }
+
                 Cache.ResetAttributeGroups();
                 return response;
             }
