@@ -8,35 +8,6 @@ namespace Restaurant.Controllers
 {
     public class BaseController : ApiController
     {
-        protected void ValidateNames(string name, string nameAr)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(name))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "Name cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-
-                if (string.IsNullOrEmpty(nameAr))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "NameAr cannot be empty",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-            }
-            catch (RestaurantException ex)
-            {
-                throw ex;
-            }
-        }
 
         protected void ValidateBranchCreate(BranchCreate branchCreate)
         {
@@ -92,25 +63,6 @@ namespace Restaurant.Controllers
                 }
                 if (!hasDefault)
                     ThrowError("no default image is specified", ErrorNumber.EmptyRequiredField);
-            }
-            catch (RestaurantException ex)
-            {
-                throw ex;
-            }
-        }
-
-        private void ThrowError(string message, ErrorNumber errorNumber)
-        {
-            try
-            {
-                throw new RestaurantException
-                {
-                    ErrorCode = new ErrorCode
-                    {
-                        ErrorMessage = message,
-                        ErrorNumber = errorNumber
-                    }
-                };
             }
             catch (RestaurantException ex)
             {
@@ -186,6 +138,67 @@ namespace Restaurant.Controllers
             }
         }
 
+        protected void ValidateImageCreate(ImageCreate request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.Content))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "empty image content",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if (request.SourceId < 1)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "wrong source id",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if (Enum.IsDefined(typeof(SourceType), request.SourceType))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "wrong source type",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void ValidateImageUpdate(ImageUpdate request)
+        {
+            try
+            {
+                if (request.Id < 1)
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "wrong source id",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+            }
+            catch (RestaurantException ex)
+            {
+                throw ex;
+            }
+        }
+
         protected void ValidateFields(ModelStateDictionary modelState)
         {
             try
@@ -247,40 +260,18 @@ namespace Restaurant.Controllers
                 };
         }
 
-        protected void ValidateImageCreate(ImageCreate request)
+        private void ThrowError(string message, ErrorNumber errorNumber)
         {
             try
             {
-                if (string.IsNullOrEmpty(request.Content))
-                    throw new RestaurantException
+                throw new RestaurantException
+                {
+                    ErrorCode = new ErrorCode
                     {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "empty image content",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-
-                if (request.SourceId < 1)
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "wrong source id",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-
-                if (Enum.IsDefined(typeof(SourceType), request.SourceType))
-                    throw new RestaurantException
-                    {
-                        ErrorCode = new ErrorCode
-                        {
-                            ErrorMessage = "wrong source type",
-                            ErrorNumber = ErrorNumber.EmptyRequiredField
-                        }
-                    };
-
+                        ErrorMessage = message,
+                        ErrorNumber = errorNumber
+                    }
+                };
             }
             catch (RestaurantException ex)
             {
@@ -288,16 +279,26 @@ namespace Restaurant.Controllers
             }
         }
 
-        protected void ValidateImageUpdate(ImageUpdate request)
+        protected void ValidateNames(string name, string nameAr)
         {
             try
             {
-                if (request.Id < 1)
+                if (string.IsNullOrEmpty(name))
                     throw new RestaurantException
                     {
                         ErrorCode = new ErrorCode
                         {
-                            ErrorMessage = "wrong source id",
+                            ErrorMessage = "Name cannot be empty",
+                            ErrorNumber = ErrorNumber.EmptyRequiredField
+                        }
+                    };
+
+                if (string.IsNullOrEmpty(nameAr))
+                    throw new RestaurantException
+                    {
+                        ErrorCode = new ErrorCode
+                        {
+                            ErrorMessage = "NameAr cannot be empty",
                             ErrorNumber = ErrorNumber.EmptyRequiredField
                         }
                     };
@@ -307,5 +308,6 @@ namespace Restaurant.Controllers
                 throw ex;
             }
         }
+
     }
 }

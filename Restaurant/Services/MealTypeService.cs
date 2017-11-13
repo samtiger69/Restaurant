@@ -50,13 +50,13 @@ namespace Restaurant.Services
                     {
                         response.Data.Add(new MealType
                         {
-                            Id = GetValue<int>(reader["Id"], 0),
-                            NameAr = GetValue<string>(reader["NameAr"], ""),
-                            Name = GetValue<string>(reader["Name"], ""),
-                            IsActive = GetValue<bool>(reader["IsActive"], false),
-                            BranchId = GetValue<int>(reader["BranchId"], 0),
-                            Description = GetValue<string>(reader["Description"], ""),
-                            ImageId = GetValue<int>(reader["ImageId"],0)
+                            Id = GetValue(reader["Id"], 0),
+                            NameAr = GetValue(reader["NameAr"], ""),
+                            Name = GetValue(reader["Name"], ""),
+                            IsActive = GetValue(reader["IsActive"], false),
+                            BranchId = GetValue(reader["BranchId"], 0),
+                            Description = GetValue(reader["Description"], ""),
+                            ImageId = GetValue(reader["ImageId"],0)
                         });
                     }
                 });

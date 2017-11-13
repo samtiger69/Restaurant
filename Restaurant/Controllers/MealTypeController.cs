@@ -16,7 +16,6 @@ namespace Restaurant.Controllers
         /// list meal types
         /// </summary>
         /// <returns>list of meal types</returns>
-        [Authorize]
         [HttpPost]
         public Response<List<MealType>> List(Request<MealTypeList> request)
         {

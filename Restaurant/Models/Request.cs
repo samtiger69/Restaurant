@@ -10,6 +10,7 @@ namespace Restaurant.Models
         /// <summary>
         /// logged in user id
         /// </summary>
+        [Required]
         public string UserId { get; set; }
     }
 

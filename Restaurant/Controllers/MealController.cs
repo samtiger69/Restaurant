@@ -16,7 +16,6 @@ namespace Restaurant.Controllers
         /// get meal list
         /// </summary>
         /// <returns>basic meal info list</returns>
-        [Authorize]
         [HttpPost]
         public Response<List<Meal>> List(Request<MealList> request)
         {
@@ -58,7 +57,6 @@ namespace Restaurant.Controllers
         /// get meal details
         /// </summary>
         /// <returns>MealAttributes/mealAttributeGroups/MealImages</returns>
-        [Authorize]
         [HttpPost]
         public Response<MealInfo> Get(Request<int> request)
         {

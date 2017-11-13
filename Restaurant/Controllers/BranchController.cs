@@ -15,7 +15,6 @@ namespace Restaurant.Controllers
         /// <summary>  
         /// Returns list of branches
         /// </summary>
-        [Authorize]
         [HttpPost]
         public Response<List<Branch>> List(Request<BaseList> request)
         {
