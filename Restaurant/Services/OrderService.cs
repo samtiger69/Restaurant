@@ -5,11 +5,18 @@ using static Restaurant.Models.Enums;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// order database manager
+    /// </summary>
     public class OrderService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile OrderService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>order service object</returns>
         public static OrderService GetInstance()
         {
             if (_instance == null)
@@ -27,6 +34,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// create an order
+        /// </summary>
+        /// <returns>created order id</returns>
         public Response<int> Create(Request<OrderCreate> request)
         {
             try
@@ -53,6 +64,12 @@ namespace Restaurant.Services
                         cmd.Parameters.AddWithValue("@Building", request.Data.Address.Building);
                         cmd.Parameters.AddWithValue("@Floor", request.Data.Address.Floor);
                         cmd.Parameters.AddWithValue("@Office", request.Data.Address.OfficeNumber);
+
+                        if (!string.IsNullOrEmpty(request.Data.Address.Latitude))
+                            cmd.Parameters.AddWithValue("@Latitude", request.Data.Address.Latitude);
+
+                        if (!string.IsNullOrEmpty(request.Data.Address.Longitude))
+                            cmd.Parameters.AddWithValue("@Longitude", request.Data.Address.Longitude);
                     }
                     if (!string.IsNullOrEmpty(request.Data.Notes))
                         cmd.Parameters.AddWithValue("@Notes", request.Data.Notes);
@@ -117,6 +134,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// update an order
+        /// </summary>
         public Response Update(Request<OrderUpdate> request)
         {
             try

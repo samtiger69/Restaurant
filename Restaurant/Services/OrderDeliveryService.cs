@@ -4,11 +4,18 @@ using System.Data.SqlClient;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// order delivery database manager
+    /// </summary>
     public class OrderDeliveryService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile OrderDeliveryService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>order delivery object</returns>
         public static OrderDeliveryService GetInstance()
         {
             if (_instance == null)
@@ -26,6 +33,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// create/update order delivery
+        /// </summary>
+        /// <returns>created/updated order delivery id</returns>
         public Response<int> Save(Request<OrderDeliverySave> request)
         {
             try

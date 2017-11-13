@@ -6,11 +6,18 @@ using System.Data.SqlClient;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// meal attribute database manager
+    /// </summary>
     public class MealAttributeService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile MealAttributeService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>meal attribute service object</returns>
         public static MealAttributeService GetInstance()
         {
             if (_instance == null)
@@ -28,6 +35,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// get meal attributes
+        /// </summary>
+        /// <returns>list of meal attribute</returns>
         public Response<List<MealAttribute>> List(Request request)
         {
             try
@@ -68,6 +79,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// create meal attribute
+        /// </summary>
+        /// <returns>created meal attribute id</returns>
         public Response<int> Create(Request<MealAttributeCreate> request)
         {
             try
@@ -107,6 +122,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// delete meal attribute
+        /// </summary>
         public Response Delete(Request<MealAttributeCreate> request)
         {
             try

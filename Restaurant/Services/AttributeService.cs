@@ -5,11 +5,18 @@ using System.Data.SqlClient;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// atribute database manager
+    /// </summary>
     public class AttributeService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile AttributeService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>attribute service object</returns>
         public static AttributeService GetInstance()
         {
             if (_instance == null)
@@ -27,6 +34,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// get attribute
+        /// </summary>
+        /// <returns>list of attributes</returns>
         public Response<List<Entities.Attribute>> List(Request request)
         {
             try
@@ -68,6 +79,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// create an attribute
+        /// </summary>
+        /// <returns>created attribute id</returns>
         public Response<int> Create(Request<AttributeCreate> request)
         {
             try
@@ -113,6 +128,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// update an attribute
+        /// </summary>
         public Response Update(Request<AttributeUpdate> request)
         {
             try

@@ -5,10 +5,20 @@ using System.Data.SqlClient;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// base database manager
+    /// </summary>
     public class BaseService
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["RestaurantDB"].ConnectionString;
 
+        /// <summary>
+        /// get the value from DataReader
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="readerValue"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns>T</returns>
         protected T GetValue<T>(object readerValue, T defaultValue = default(T))
         {
             if (readerValue == null || readerValue == DBNull.Value)
@@ -17,6 +27,9 @@ namespace Restaurant.Services
                 return (T)Convert.ChangeType(readerValue, typeof(T));
         }
 
+        /// <summary>
+        /// sqlCommand execute non query
+        /// </summary>
         protected void ExecuteNonQuery(string storedProcedure, Action<SqlCommand> fillCommand)
         {
             try
@@ -40,6 +53,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// sqlCommand execute scalar
+        /// </summary>
+        /// <returns>string</returns>
         protected string ExecuteScalar(string storedProcedure, Action<SqlCommand> fillCommand)
         {
             try
@@ -63,6 +80,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// sqlCommand execute reader
+        /// </summary>
         protected void ExecuteReader(string storedProcedure, Action<SqlCommand> fillCommand, Action<SqlDataReader> fetchData)
         {
             try
@@ -86,6 +106,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// handle errors
+        /// </summary>
         protected void HandleErrorCode(ErrorNumber errorNumber)
         {
             try

@@ -6,11 +6,18 @@ using System.Data.SqlClient;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// atribute group database manager
+    /// </summary>
     public class AttributeGroupService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile AttributeGroupService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>attribute group service object</returns>
         public static AttributeGroupService GetInstance()
         {
             if (_instance == null)
@@ -28,6 +35,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// get attribute groups
+        /// </summary>
+        /// <returns>list of attribute groups</returns>
         public Response<List<AttributeGroup>> List(Request request)
         {
             try
@@ -69,6 +80,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// create an attribute group
+        /// </summary>
+        /// <returns>created attribute group id</returns>
         public Response<int> Create(Request<AttributeGroupCreate> request)
         {
             try
@@ -121,6 +136,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// update an attribute group
+        /// </summary>
         public Response Update(Request<AttributeGroupUpdate> request)
         {
             try

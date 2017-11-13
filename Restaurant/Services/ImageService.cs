@@ -6,11 +6,18 @@ using static Restaurant.Models.Enums;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// image database manager
+    /// </summary>
     public class ImageService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile ImageService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>image service object</returns>
         public static ImageService GetInstance()
         {
             if (_instance == null)
@@ -28,6 +35,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// get image by id
+        /// </summary>
+        /// <returns>image</returns>
         public byte[] Get(int id)
         {
             try
@@ -53,6 +64,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// get image list
+        /// </summary>
+        /// <returns>list of images</returns>
         public Response<List<Entities.Image>> List(Request request)
         {
             try
@@ -94,6 +109,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// create an image
+        /// </summary>
+        /// <returns>created image id</returns>
         public Response<int> Create(Request<ImageCreate> request)
         {
             try
@@ -138,6 +157,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// update an image
+        /// </summary>
         public Response Update(Request<ImageUpdate> request)
         {
             try
@@ -181,6 +203,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// delete an image
+        /// </summary>
         public Response Delete(Request<int> request)
         {
             try

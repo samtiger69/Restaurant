@@ -107,7 +107,7 @@ namespace Restaurant.Controllers
             }
         }
 
-        protected void ValidateCreateOrder(OrderCreate orderCreate)
+        protected void ValidateOrderCreate(OrderCreate orderCreate)
         {
             try
             {
@@ -128,6 +128,12 @@ namespace Restaurant.Controllers
                     orderCreate.Address.Street = orderCreate.Address.Street.Trim();
                     orderCreate.Address.Building = orderCreate.Address.Building.Trim();
                     orderCreate.Address.OfficeNumber = orderCreate.Address.OfficeNumber.Trim();
+
+                    if (!string.IsNullOrEmpty(orderCreate.Address.Latitude))
+                        orderCreate.Address.Latitude = orderCreate.Address.Latitude.Trim();
+
+                    if (!string.IsNullOrEmpty(orderCreate.Address.Longitude))
+                        orderCreate.Address.Longitude = orderCreate.Address.Longitude.Trim();
                 }
                 if(!string.IsNullOrEmpty(orderCreate.Notes))
                     orderCreate.Notes = orderCreate.Notes.Trim();

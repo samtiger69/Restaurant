@@ -66,7 +66,7 @@ namespace Restaurant.Controllers
             try
             {
                 ValidateBaseRequest(request);
-                ValidateCreateOrder(request.Data);
+                ValidateOrderCreate(request.Data);
                 var orderService = OrderService.GetInstance();
                 return orderService.Create(request);
             }

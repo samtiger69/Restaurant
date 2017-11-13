@@ -94,6 +94,16 @@ namespace Restaurant.Models
         public string Floor { get; set; }
 
         /// <summary>
+        /// Latitude
+        /// </summary>
+        public string Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude
+        /// </summary>
+        public string Longitude { get; set; }
+
+        /// <summary>
         /// office number
         /// </summary>
         [Required]

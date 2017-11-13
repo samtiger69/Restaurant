@@ -6,11 +6,18 @@ using System.Data.SqlClient;
 
 namespace Restaurant.Services
 {
+    /// <summary>
+    /// branch database manager
+    /// </summary>
     public class BranchService : BaseService
     {
         private static object lockObj = new Object();
         private static volatile BranchService _instance = null;
 
+        /// <summary>
+        /// singlton
+        /// </summary>
+        /// <returns>branch service object</returns>
         public static BranchService GetInstance()
         {
             if (_instance == null)
@@ -28,6 +35,10 @@ namespace Restaurant.Services
         {
         }
 
+        /// <summary>
+        /// get branches
+        /// </summary>
+        /// <returns>list of branches</returns>
         public Response<List<Branch>> List(Request request)
         {
             try
@@ -72,6 +83,10 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// create a branch
+        /// </summary>
+        /// <returns>created branch id</returns>
         public Response<int> Create(Request<BranchCreate> request)
         {
             try
@@ -118,6 +133,9 @@ namespace Restaurant.Services
             }
         }
 
+        /// <summary>
+        /// update a branch
+        /// </summary>
         public Response Update(Request<BranchUpdate> request)
         {
             try
